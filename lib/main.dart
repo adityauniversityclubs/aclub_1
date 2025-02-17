@@ -1,3 +1,4 @@
+import 'package:aclub/homepage.dart';
 import 'package:aclub/login.dart';
 import 'package:flutter/material.dart';
 import 'authService.dart';
@@ -12,8 +13,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home://Allpastevents(),
-       SimpleRegisterScreen(),
+      home:HomeScreen(),
+      //Allpastevents(),
+      // SimpleRegisterScreen(),
      // ClubsScreen_a(),
     );
   }
@@ -74,8 +76,8 @@ class _SimpleRegisterScreenState extends State<SimpleRegisterScreen> {
           child: ListView(
             children: [
               SizedBox(height: screenHeight * 0.1),
-              Image.asset(
-                'D:/pro/aclub/assets/logo/AU.png',
+              Image.network(
+                'assets/logo/AU.png',
                 height: 100,
               ),
               SizedBox(height: screenHeight * 0.04),

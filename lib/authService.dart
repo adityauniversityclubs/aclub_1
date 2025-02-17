@@ -131,4 +131,14 @@ Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)asy
    print('response body:${res.body}');
    return jsonDecode(res.body);
  }
+ //get all clubs data 
+ Future<Map<String,dynamic>>getAllClubsData()async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/clubs/get-all-clubs'),
+     headers: {'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
 }

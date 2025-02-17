@@ -55,7 +55,7 @@ if(response.containsKey('status')&&response['status']==true){
   Shared().rollNo=rollNumber;
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Successfully logedin")));
   
-  Navigator.push(context, MaterialPageRoute(builder: (context)=>Homepage()));
+  Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
 }else{
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${response['msg']}")));
 }
@@ -81,7 +81,7 @@ if(response.containsKey('status')&&response['status']==true){
           child: ListView(
             children: [
               SizedBox(height: screenHeight * 0.1),
-              Image.asset('assets/images/AU.png', height: screenHeight / 6, width: screenWidth / 9),
+              Image.network('assets/images/AU.png', height: screenHeight / 6, width: screenWidth / 9),
               SizedBox(height: screenHeight * 0.04),
               const Text('Welcome,', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
