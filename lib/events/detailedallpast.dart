@@ -1,4 +1,4 @@
-import 'package:aclub/authService.dart';
+import 'package:aclub/auth/authService.dart';
 import 'package:aclub/rollno.dart';
 import 'package:flutter/material.dart';
 /// Main Screen with Tabs

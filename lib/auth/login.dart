@@ -1,6 +1,6 @@
-import 'package:aclub/authService.dart';
-import 'package:aclub/forgot.dart';
-import 'package:aclub/homepage.dart';
+import 'authService.dart';
+import 'forgot.dart';
+import 'package:aclub/home/homepage.dart';
 import 'package:aclub/rollno.dart';
 import 'package:flutter/material.dart';
 class SimpleLoginScreen extends StatefulWidget {

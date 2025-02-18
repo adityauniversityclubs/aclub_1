@@ -1,7 +1,8 @@
-import 'package:aclub/homepage.dart';
-import 'package:aclub/login.dart';
+import 'package:aclub/home/homepage.dart';
+import 'package:aclub/auth/login.dart';
 import 'package:flutter/material.dart';
-import 'authService.dart';
+import 'package:aclub/auth/authService.dart';
+import 'package:aclub/clubs/club_screen_tab_bar.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -10,10 +11,11 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
+
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:HomeScreen(),
+      home: HomeScreen(),
       //Allpastevents(),
       // SimpleRegisterScreen(),
      // ClubsScreen_a(),
@@ -29,7 +31,7 @@ class SimpleRegisterScreen extends StatefulWidget {
 }
 
 class _SimpleRegisterScreenState extends State<SimpleRegisterScreen> {
-  final AuthService authService = AuthService();
+ AuthService authService = AuthService();
   final TextEditingController firstcntrl = TextEditingController();
   final TextEditingController lastcntrl = TextEditingController();
   final TextEditingController rollcntrl = TextEditingController();

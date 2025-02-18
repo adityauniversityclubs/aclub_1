@@ -1,4 +1,4 @@
-import 'package:aclub/login.dart';
+import 'package:aclub/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'authService.dart';
 class ChangePassword extends StatefulWidget {

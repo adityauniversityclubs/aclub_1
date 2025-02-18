@@ -12,10 +12,10 @@
 // import 'package:aclub/views/notify/ntf.dart';
 import 'package:aclub/events/allpastevents.dart';
 import 'package:flutter/material.dart';
-import 'allevents.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:aclub/authService.dart';
+import 'package:aclub/auth/authService.dart';
+import 'package:aclub/clubs/club_screen_tab_bar.dart';
 // import 'settings.dart';
 // import 'contact.dart';
 
@@ -103,7 +103,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+                MaterialPageRoute(builder: (context) =>Allpastevents()
+             ),
               );
             },
           ),
@@ -114,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+                MaterialPageRoute(builder: (context) => Allpastevents()),
               );
             },
           ),
@@ -126,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               Navigator.pop(context);
               Navigator.push(
                 context,
-               MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+               MaterialPageRoute(builder: (context) => Allpastevents()),
               );
             },
           ),
@@ -137,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               Navigator.pop(context);
               Navigator.push(
                 context,
-               MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+               MaterialPageRoute(builder: (context) => Allpastevents()),
               );
             },
             
@@ -149,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               Navigator.pop(context);
               Navigator.push(
                 context,
-               MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+               MaterialPageRoute(builder: (context) => Allpastevents()),
               );
             },
           ),
@@ -161,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
-              MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+              MaterialPageRoute(builder: (context) => Allpastevents()),
               );
             },
           ),
@@ -339,16 +340,14 @@ Widget _buildCategoryItem(int index) {
     {'name': 'RED', 'image': 'assets/clublogo/RED.png', 'color': Colors.grey},
   ];
 
-  return GestureDetector(
-    onTap: () => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>const ClubsScreen_a()),
-    ),
-    child: Column(
-      children: [
-        Container(
+  return Column(
+    children: [
+      GestureDetector(onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> ClubsScreen_a(name: allData[index]['name'], clubId: allData[index]['clubId'])));
+      },
+        child: Container(
           width: 70,
-
+          
           height: 70,
           decoration: BoxDecoration(
             color: categories[index]['color'].withOpacity(0.1),
@@ -372,16 +371,16 @@ Widget _buildCategoryItem(int index) {
             ),
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          allData[index]['clubId'],
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        allData[index]['clubId'],
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }
 
@@ -434,7 +433,7 @@ Widget _buildCategoryItem(int index) {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ClubsScreen_a(),
+          builder: (context) =>Allpastevents(),
         ),
       ),
       child: Container(
@@ -690,7 +689,7 @@ Widget _buildCategoryItem(int index) {
           onPressed: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ClubsScreen_a(),
+          builder: (context) => Allpastevents(),
         ),
       ),
         ),
@@ -740,14 +739,14 @@ slivers: [
       _buildSectionHeader('Clubs', onSeeAll: () {
         Navigator.push(
           context,
-                MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+                MaterialPageRoute(builder: (context) => Allpastevents()),
         );
       }),
       _buildCategoryRow(),
       _buildSectionHeader('🔴Live Events', onSeeAll: () {
         Navigator.push(
           context,
-                MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+                MaterialPageRoute(builder: (context) => Allpastevents()),
         );
       }),
       _buildListeningSection(),
@@ -755,7 +754,7 @@ slivers: [
       _buildSectionHeader('Events Ongoing', onSeeAll: () {
         Navigator.push(
           context,
-                MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+                MaterialPageRoute(builder: (context) =>Allpastevents()),
         );
       }),
       _buildKnowledgeSection(),
@@ -763,7 +762,7 @@ slivers: [
       _buildSectionHeader(' Upcomping Events', onSeeAll: () {
         Navigator.push(
           context,
-                MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+                MaterialPageRoute(builder: (context) => Allpastevents()),
         );
       }),
       _buildledgeSection(),
@@ -771,7 +770,7 @@ slivers: [
       _buildSectionHeader('Past Events', onSeeAll: () {
         Navigator.push(
           context,
-                MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+                MaterialPageRoute(builder: (context) => Allpastevents()),
         );
       }),
       _buildEventGrid(),
@@ -779,7 +778,7 @@ slivers: [
       _buildSectionHeader('Latest News', onSeeAll: () {
         Navigator.push(
           context,
-                MaterialPageRoute(builder: (context) => ClubsScreen_a()),
+                MaterialPageRoute(builder: (context) => Allpastevents()),
         );
       }),
       _buildNewsList(),
