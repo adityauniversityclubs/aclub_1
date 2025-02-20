@@ -1,5 +1,7 @@
 
+import 'package:aclub/auth/authService.dart';
 import 'package:aclub/events/allpastevents.dart';
+import 'package:aclub/events/detailedallpast.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 // import 'package:aclub/events/detailedallpast.dart';
@@ -16,8 +18,52 @@ class ClubsScreen_a extends StatefulWidget {
 
 class _ClubsScreen_aState extends State<ClubsScreen_a>
     with SingleTickerProviderStateMixin {
+       @override
+  void initState() {
+    super.initState();
+    // Three tabs: Events, Bio, About
+    _tabController = TabController(length: 3, vsync: this);
+    liveEvents();
+    upComingEvents();
+    pastEvents();
+  }
   late TabController _tabController;
+      AuthService authService=AuthService();
+  List<dynamic>liveEventList=[];
+   List<dynamic>upComingEventList=[];
+    List<dynamic>pastEventList=[];
+  //get live events data
+  void liveEvents()async{
+    final response=await authService.getLiveData(widget.clubId);
+    if(response.containsKey('status')&&response['status']==true){
+      print('live response:$response :${widget.clubId}');
+      setState(() {
+        liveEventList=response['ongoing events'];
+      });
+    }
+  } 
 
+  //get upComing events 
+    void upComingEvents()async{
+    final response=await authService.getupComingData(widget.clubId);
+    if(response.containsKey('status')&&response['status']==true){
+      print("Upcoming response:$response");
+      setState(() {
+        upComingEventList=response['upcoming events'];
+      });
+    }
+  } 
+
+  //get past events 
+    void pastEvents()async{
+    final response=await authService.getPastData(widget.clubId);
+    if(response.containsKey('status')&&response['status']==true){
+      print("Past response:$response");
+      setState(() {
+        pastEventList=response['past events'];
+      });
+    }
+  }
   // Data for the bio (Club info), events, and about sections
   final List<Map<String, dynamic>> groupItems = [
     {
@@ -44,12 +90,6 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
     },
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    // Three tabs: Events, Bio, About
-    _tabController = TabController(length: 3, vsync: this);
-  }
 
   @override
   void dispose() {
@@ -251,7 +291,7 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
       body: TabBarView(
         controller: _tabController,
         children: [
-            const ClubsEventScreen(), // Events tab now shows ClubsEventScreen
+             ClubsEventScreen(clubId: widget.clubId,liveList: liveEventList,upComingList: upComingEventList,pastList: pastEventList,), // Events tab now shows ClubsEventScreen
 
           // Tab 1: Events (non-clickable UI)
 
@@ -360,7 +400,11 @@ class DetailScreen extends StatelessWidget {
 
 
 class ClubsEventScreen extends StatefulWidget {
-  const ClubsEventScreen({super.key});
+  final String clubId;
+  final List<dynamic>liveList;
+  final List<dynamic>upComingList;
+   final List<dynamic>pastList;
+  const ClubsEventScreen({super.key,required this.clubId,required this.liveList,required this.upComingList,required this.pastList});
 
   @override
   State<ClubsEventScreen> createState() => _ClubsEventScreenState();
@@ -385,7 +429,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
                   MaterialPageRoute(builder: (context) =>Allpastevents()),
                 );
               }),
-              _buildListeningSection(),
+              _buildListeningSection(widget.liveList),
               const SizedBox(height: 20),
               _buildSectionHeader('Upcoming Events', onSeeAll: () {
                 Navigator.push(
@@ -393,7 +437,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
                   MaterialPageRoute(builder: (context) => Allpastevents()),
                 );
               }),
-              _buildledgeSection(),
+              _buildledgeSection(widget.upComingList),
               const SizedBox(height: 18),
               _buildSectionHeader('Past Events', onSeeAll: () {
                 Navigator.push(
@@ -401,7 +445,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
                   MaterialPageRoute(builder: (context) => (Allpastevents())),
                 );
               }),
-              _buildPastSection(),
+              _buildPastSection(widget.pastList),
             ]),
           ),
         ],
@@ -661,99 +705,86 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
     );
   }
 
-  Widget _buildListeningSection() {
+  Widget _buildListeningSection(List<dynamic>list) {
     return SizedBox(
+      width: 150,
       height: 150,
-      child: ListView(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        children: [
-          _buildListeningCard('assets/ob/ob3.jpg', 'LEO EVENT 8/12'),
-          _buildListeningCard('assets/ob/ob2.jpg', 'ROT EVENT 15/20'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'NSS EVENT 5/15'),
-          _buildListeningCard('assets/ob/ob4.jpg', 'LEO EVENT /12'),
-          _buildListeningCard('assets/ob/ob2.jpg', 'ROT EVENT 15/20'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'NSS EVENT 5/15'),
-
-        ],
-      ),
+        itemCount:list.length ,
+        itemBuilder: (context,index){
+      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName'],);
+      }),
     );
   }
 
-  Widget _buildListeningCard(String imagePath, String episode) {
-    return Container(
-      width: 150,
-      margin: const EdgeInsets.only(left: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
+  Widget _buildListeningCard(String imagePath, String episode,) {
+    return GestureDetector(onTap: (){
+      
+    },
+      child: Container(
+        width: 150,
+        margin: const EdgeInsets.only(left: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: NetworkImage(imagePath),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Align(
-        alignment: Alignment.bottomLeft,
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.black54,
-          child: Text(
-            episode,
-            style: const TextStyle(color: Colors.white, fontSize: 12),
+        child: Align(
+          alignment: Alignment.bottomLeft,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            color: Colors.black54,
+            child: Text(
+              episode,
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+            ),
           ),
         ),
       ),
     );
   }
+  //  Widget _buildKnowledgeSection(List<dynamic>list) {
+  //   return SizedBox(
+  //     width: 150,
+  //     height: 150,
+  //     child: ListView.builder(
+  //       scrollDirection: Axis.horizontal,
+  //       itemCount:list.length ,
+  //       itemBuilder: (context,index){
+  //     return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName']);
+  //     }),
+  //   );
+  // }
 
-  Widget _buildKnowledgeSection() {
+
+
+
+  Widget _buildledgeSection(List<dynamic>list) {
     return SizedBox(
+      width: 150,
       height: 150,
-      child: ListView(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        children: [
-          _buildListeningCard('assets/ob/ob3.jpg', 'LEO EVENT 8/12'),
-          _buildListeningCard('assets/ob/ob2.jpg', 'ROT EVENT 15/20'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'NSS EVENT 5/15'),
-          _buildListeningCard('assets/ob/ob4.jpg', 'LEO EVENT /12'),
-          _buildListeningCard('assets/ob/ob2.jpg', 'ROT EVENT 15/20'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'NSS EVENT 5/15'),],
-// Improved code for the selected portion
-// Since t]here is no selected portion, I will provide an improved version of the entire code  ),
-      ),
+        itemCount:list.length ,
+        itemBuilder: (context,index){
+      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName']);
+      }),
     );
   }
 
-  Widget _buildledgeSection() {
-    return SizedBox(
-      height: 150,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          _buildListeningCard('assets/ob/ob2.jpg', 'LEO EVENT 8/42'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'ROT EVENT 15/30'),
-          _buildListeningCard('assets/ob/ob3.jpg', 'NSS EVENT 5/11'),
-          _buildListeningCard('assets/ob/ob4.jpg', 'LEO EVENT 3/12'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'ROT EVENT 5/10'),
-          _buildListeningCard('assets/ob/ob3.jpg', 'NSS EVENT 5/13'),],
-// Improved code for the selected portion
-// Since there is no selected portion, I will provide an improved version of the entire code  ),
-      ),
-    );
-  }
 
-  Widget _buildPastSection() {
+Widget _buildPastSection(List<dynamic>list) {
     return SizedBox(
+      width: 150,
       height: 150,
-      child: ListView(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        children: [
-_buildListeningCard('assets/ob/ob4.jpg', 'LEO EVENT 3/12'),
-          _buildListeningCard('assets/ob/ob2.jpg', 'LEO EVENT 8/42'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'ROT EVENT 15/30'),
-          _buildListeningCard('assets/ob/ob3.jpg', 'NSS EVENT 5/11'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'ROT EVENT 5/10'),
-          _buildListeningCard('assets/ob/ob3.jpg', 'NSS EVENT 5/13'),],
-// Improved code for the selected portion
-// Since there is no selected portion, I will provide an improved version of the entire code  ),
-      ),
+        itemCount:list.length ,
+        itemBuilder: (context,index){
+      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName']);
+      }),
     );
   }

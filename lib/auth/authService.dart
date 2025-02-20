@@ -141,4 +141,36 @@ Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)asy
   print('response body:${res.body}');
   return jsonDecode(res.body);
 }
+
+//get live events
+ Future<Map<String,dynamic>>getLiveData(String clubId)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/events/ongoing-events?clubId=$clubId'),
+     headers: {'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
+//get Live upcoming data
+ Future<Map<String,dynamic>>getupComingData(String clubId)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/events/upcoming-events?clubId=$clubId'),
+     headers: {'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
+
+//get past events
+ Future<Map<String,dynamic>>getPastData(String clubId)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/events/past-events?clubId=$clubId'),
+     headers: {'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
 }

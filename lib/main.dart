@@ -2,7 +2,7 @@ import 'package:aclub/home/homepage.dart';
 import 'package:aclub/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:aclub/auth/authService.dart';
-import 'package:aclub/clubs/club_screen_tab_bar.dart';
+//import 'package:aclub/clubs/club_screen_tab_bar.dart';
 void main() {
   runApp(const MyApp());
 }
