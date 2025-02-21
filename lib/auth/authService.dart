@@ -173,4 +173,46 @@ Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)asy
   print('response body:${res.body}');
   return jsonDecode(res.body);
 }
+ Future<Map<String,dynamic>>getEventDetailsByName(String eventName)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/events/get-event-details?eventName=$eventName'),
+     headers: {'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
+
+
+//get all live events
+ Future<Map<String,dynamic>>getAllLiveData(String clubId)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/events/all-ongoing-events'),
+     headers: {'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
+//get all Live upcoming data
+ Future<Map<String,dynamic>>getAllupComingData(String clubId)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/events/all-upcoming-events'),
+     headers: {'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
+
+//get all past events
+ Future<Map<String,dynamic>>getAllPastData(String clubId)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/events/all-past-events'),
+     headers: {'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
 }

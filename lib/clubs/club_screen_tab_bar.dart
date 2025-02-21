@@ -2,6 +2,7 @@
 import 'package:aclub/auth/authService.dart';
 import 'package:aclub/events/allpastevents.dart';
 import 'package:aclub/events/detailedallpast.dart';
+import 'package:aclub/rollno.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 // import 'package:aclub/events/detailedallpast.dart';
@@ -291,7 +292,7 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
       body: TabBarView(
         controller: _tabController,
         children: [
-             ClubsEventScreen(clubId: widget.clubId,liveList: liveEventList,upComingList: upComingEventList,pastList: pastEventList,), // Events tab now shows ClubsEventScreen
+             ClubsEventScreen(clubId: widget.clubId,liveList: liveEventList,upComingList: upComingEventList,pastList: pastEventList,clubName: widget.name,), // Events tab now shows ClubsEventScreen
 
           // Tab 1: Events (non-clickable UI)
 
@@ -392,19 +393,13 @@ class DetailScreen extends StatelessWidget {
   }
 }
 
-
-
-
-
-
-
-
 class ClubsEventScreen extends StatefulWidget {
   final String clubId;
   final List<dynamic>liveList;
   final List<dynamic>upComingList;
    final List<dynamic>pastList;
-  const ClubsEventScreen({super.key,required this.clubId,required this.liveList,required this.upComingList,required this.pastList});
+   final String clubName;
+  const ClubsEventScreen({super.key,required this.clubId,required this.liveList,required this.upComingList,required this.pastList,required this.clubName});
 
   @override
   State<ClubsEventScreen> createState() => _ClubsEventScreenState();
@@ -452,11 +447,6 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
       ),
     );
   }
-}
-
-
-
-
   Widget _buildSectionHeader(String title, {VoidCallback? onSeeAll}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
@@ -479,15 +469,6 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
       ),
     );
   }
-
-
-
-
-
-
-
-
-
 
   Widget _buildEventGrid() {
     return GridView.builder(
@@ -718,9 +699,20 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
     );
   }
 
-  Widget _buildListeningCard(String imagePath, String episode,) {
-    return GestureDetector(onTap: (){
-      
+  Widget _buildListeningCard(String imagePath, String episode) {
+    return GestureDetector(onTap: ()async{
+       List<dynamic>list=[];
+      final response=await AuthService().getEventDetailsByName(episode);
+      if(response.containsKey('status')&&response['status']==true){
+        print('getEventDetailsByName:$response');
+         setState(() {
+           list=response['eventDetails'];
+         });
+         final event=response['eventDetails'][0];
+         Navigator.push(context, MaterialPageRoute(
+          builder: (context)=>
+          ClubsScreena(clubName: widget.clubName, eventName: event['eventName'], date: DateTime.parse(event['date']), location: event['location'], description: event['details'], list:List<String>.from(event['guest']), rollNo: Shared().rollNo)));
+      }
     },
       child: Container(
         width: 150,
@@ -788,3 +780,6 @@ Widget _buildPastSection(List<dynamic>list) {
       }),
     );
   }
+}
+
+  

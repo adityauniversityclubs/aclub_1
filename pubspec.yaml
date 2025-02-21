@@ -33,6 +33,7 @@ dependencies:
   http:
   iconsax:  
   carousel_slider:
+  provider: ^6.0.0
   
 
 

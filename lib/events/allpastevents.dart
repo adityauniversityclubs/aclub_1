@@ -1,5 +1,5 @@
-import 'package:aclub/events/detailedallpast.dart';
-import 'package:aclub/rollno.dart';
+// import 'package:aclub/events/detailedallpast.dart';
+// import 'package:aclub/rollno.dart';
 import 'package:flutter/material.dart';
 import 'package:aclub/auth/authService.dart';
 
@@ -49,7 +49,7 @@ class _AllpasteventsState extends State<Allpastevents> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ClubsScreena(clubName: events[index]['clubName'], eventName: events[index]['eventName'], date: DateTime.parse(events[index]['date']), location:events[index]['location'], description:events[index]['details'],rollNo: Shared().rollNo,)));
+                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>ClubsScreena(clubName: events[index]['clubName'], eventName: events[index]['eventName'], date: DateTime.parse(events[index]['date']), location:events[index]['location'], description:events[index]['details'],rollNo: Shared().rollNo,)));
                         },
                           child: Container(
                             width: 200,

@@ -8,6 +8,7 @@ class ClubsScreena extends StatefulWidget {
   final DateTime date;
   final String location;
   final String description;
+  final List<String>list;
   final String rollNo;
 
   const ClubsScreena({
@@ -17,7 +18,8 @@ class ClubsScreena extends StatefulWidget {
     required this.date,
     required this.location,
     required this.description,
-    required this.rollNo
+    required this.list,
+    required this.rollNo,
   });
 
   @override
@@ -66,7 +68,7 @@ class _ClubsScreenState extends State<ClubsScreena>
         children: [
           EventDetailsTab(
             eventName: widget.eventName,
-            date:widget.date,
+            date: widget.date ,
             location: widget.location,
             description: widget.description,
           ),

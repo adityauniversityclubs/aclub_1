@@ -751,7 +751,7 @@ slivers: [
       }),
       _buildListeningSection(),
       const SizedBox(height: 20),
-      _buildSectionHeader('Events Ongoing', onSeeAll: () {
+      _buildSectionHeader('Upcooming Events', onSeeAll: () {
         Navigator.push(
           context,
                 MaterialPageRoute(builder: (context) =>Allpastevents()),
@@ -759,7 +759,7 @@ slivers: [
       }),
       _buildKnowledgeSection(),
       const SizedBox(height: 18),
-      _buildSectionHeader(' Upcomping Events', onSeeAll: () {
+      _buildSectionHeader(' Past Events', onSeeAll: () {
         Navigator.push(
           context,
                 MaterialPageRoute(builder: (context) => Allpastevents()),
@@ -767,14 +767,14 @@ slivers: [
       }),
       _buildledgeSection(),
       const SizedBox(height: 18),
-      _buildSectionHeader('Past Events', onSeeAll: () {
-        Navigator.push(
-          context,
-                MaterialPageRoute(builder: (context) => Allpastevents()),
-        );
-      }),
-      _buildEventGrid(),
-      const SizedBox(height: 18),
+      // _buildSectionHeader('Past Events', onSeeAll: () {
+      //   Navigator.push(
+      //     context,
+      //           MaterialPageRoute(builder: (context) => Allpastevents()),
+      //   );
+      // }),
+      // _buildEventGrid(),
+      // const SizedBox(height: 18),
       _buildSectionHeader('Latest News', onSeeAll: () {
         Navigator.push(
           context,
