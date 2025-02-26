@@ -48,13 +48,27 @@ Future<Map<String,dynamic>>forgotPass(String roll)async{
   print('response body:${res.body}');
   return jsonDecode(res.body);
 }
-Future<Map<String,dynamic>>resetPass(String otp,String password,String rollNo)async{
+//verify Otp
+Future<Map<String,dynamic>>verifyOtp(String otp,String rollNo)async{
+  final res=await http.post(
+    Uri.parse('$baseUrl/auth/verify-otp'),
+     headers: {'Content-Type': 'application/json'},
+     body: jsonEncode({
+      "rollNo":rollNo,
+      "otp":otp,
+     })
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
+
+Future<Map<String,dynamic>>resetPass(String password,String rollNo)async{
   final res=await http.post(
     Uri.parse('$baseUrl/auth/set-forgot-password'),
      headers: {'Content-Type': 'application/json'},
      body: jsonEncode({
       "rollNo":rollNo,
-      "otp":otp,
       "password":password
      })
   );
@@ -73,16 +87,24 @@ Future<Map<String,dynamic>>allPastEvents()async{
 }
 //event regestered members
 Future<Map<String,dynamic>>allRegesteredStudents(String eventName)async{
+  // print(eventName);
+  eventName = Uri.encodeComponent(eventName).replaceAll("+", "%20");
   final res=await http.get(
+    
     Uri.parse('$baseUrl/registrations/registered-users?eventName=$eventName'),
      headers: {'Content-Type': 'application/json'},
   );
    print('response code:${res.statusCode}');
   print('response body:${res.body}');
+
+  // return jsonDecode(eventName);
   return jsonDecode(res.body);
 }
 //post feedback
 Future<Map<String,dynamic>>giveFeedBack(String eventName,String feedback,int rating,String rollNo)async{
+  
+  // eventName = Uri.encodeComponent(eventName).replaceAll("+", "%20");
+
   final res=await http.post(
     Uri.parse('$baseUrl/registrations/give-feedback'),
      headers: {'Content-Type': 'application/json'},
@@ -95,10 +117,13 @@ Future<Map<String,dynamic>>giveFeedBack(String eventName,String feedback,int rat
   );
    print('response code:${res.statusCode}');
   print('response body:${res.body}');
+  print('${eventName}');
   return jsonDecode(res.body);
 }
 //get feedback
 Future<Map<String,dynamic>>getFeedBack(String eventName)async{
+  
+  eventName = Uri.encodeComponent(eventName).replaceAll("+", "%20");
   final res=await http.get(
     Uri.parse('$baseUrl/registrations/get-feedback?eventName=$eventName'),
      headers: {'Content-Type': 'application/json'},
@@ -114,7 +139,7 @@ Future<Map<String,dynamic>>registerEvent(String eventName,String rollNo)async{
      headers: {'Content-Type': 'application/json'},
      body: jsonEncode({
       "eventName":eventName,
-      'rollNo':'22a91a0571'
+      'rollNo':rollNo
      })
   );
    print('response code:${res.statusCode}');
@@ -123,8 +148,10 @@ Future<Map<String,dynamic>>registerEvent(String eventName,String rollNo)async{
 }
 //regestration status
 Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)async{
+
+  eventName = Uri.encodeComponent(eventName).replaceAll("+", "%20");
   final res=await http.get(
-    Uri.parse('$baseUrl/registrations/registration-status?eventName=$eventName&rollNo=22a91a0571'),
+    Uri.parse('$baseUrl/registrations/registration-status?eventName=$eventName&rollNo=$rollNo'),
     headers: {'Content-Type': 'application/json'},
  );
    print('response code:${res.statusCode}');
@@ -174,18 +201,19 @@ Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)asy
   return jsonDecode(res.body);
 }
  Future<Map<String,dynamic>>getEventDetailsByName(String eventName)async{
+  eventName = Uri.encodeComponent(eventName).replaceAll("+", "%20");
   final res=await http.get(
     Uri.parse('$baseUrl/events/get-event-details?eventName=$eventName'),
      headers: {'Content-Type': 'application/json'},
   );
    print('response code:${res.statusCode}');
-  print('response body:${res.body}');
+  print('response body:${res.body}, , eventname : ${eventName}');
   return jsonDecode(res.body);
 }
 
 
 //get all live events
- Future<Map<String,dynamic>>getAllLiveData(String clubId)async{
+ Future<Map<String,dynamic>>getAllLiveData()async{
   final res=await http.get(
     Uri.parse('$baseUrl/events/all-ongoing-events'),
      headers: {'Content-Type': 'application/json'},
@@ -195,7 +223,7 @@ Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)asy
   return jsonDecode(res.body);
 }
 //get all Live upcoming data
- Future<Map<String,dynamic>>getAllupComingData(String clubId)async{
+ Future<Map<String,dynamic>>getAllupComingData()async{
   final res=await http.get(
     Uri.parse('$baseUrl/events/all-upcoming-events'),
      headers: {'Content-Type': 'application/json'},
@@ -206,9 +234,20 @@ Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)asy
 }
 
 //get all past events
- Future<Map<String,dynamic>>getAllPastData(String clubId)async{
+ Future<Map<String,dynamic>>getAllPastData()async{
   final res=await http.get(
     Uri.parse('$baseUrl/events/all-past-events'),
+     headers: {'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
+
+//getAllClubMembers
+ Future<Map<String,dynamic>>getAllClubMembers(String clubId)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/participation/get-club-members?clubId=$clubId'),
      headers: {'Content-Type': 'application/json'},
   );
    print('response code:${res.statusCode}');

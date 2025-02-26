@@ -115,7 +115,7 @@ class _EventDetailsTabState extends State<EventDetailsTab> {
 
   void registerStatus() async {
     final response =
-        await authService.regestrationStatus(widget.eventName, Shared().rollNo);
+        await authService.regestrationStatus(widget.eventName,Shared().rollNo);
     if (response.containsKey('status') && response['status'] == true) {
       setState(() {
         _isRegister = true; // Update UI
@@ -130,7 +130,7 @@ class _EventDetailsTabState extends State<EventDetailsTab> {
 
   void registerEvent() async {
     final response =
-        await authService.registerEvent(widget.eventName, Shared().rollNo);
+        await authService.registerEvent(widget.eventName,Shared().rollNo);
     if (response.containsKey('status') && response['status'] == true) {
       setState(() {
         _isRegister = true; // Update status after successful registration
@@ -231,6 +231,7 @@ class _MembersTabState extends State<MembersTab> {
   void getRegistered() async {
     final response = await authService.allRegesteredStudents(widget.eventName);
     print('response data:$response');
+    print(widget.eventName);
     if (response.containsKey('status') && response['status'] == true) {
       setState(() {
         listMembers = response['registered users'];

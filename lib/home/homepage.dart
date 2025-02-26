@@ -10,12 +10,17 @@
 // import 'package:aclub/views/home/about.dart';
 // import 'package:aclub/views/home/faq.dart';
 // import 'package:aclub/views/notify/ntf.dart';
+import 'package:aclub/auth/login.dart';
 import 'package:aclub/events/allpastevents.dart';
+import 'package:aclub/rollno.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:aclub/auth/authService.dart';
 import 'package:aclub/clubs/club_screen_tab_bar.dart';
+import 'package:aclub/events/detailedallpast.dart';
+import 'package:aclub/home/bottom_Navbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'settings.dart';
 // import 'contact.dart';
 
@@ -50,7 +55,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final CarouselSliderController _carouselController = CarouselSliderController();
   int _currentCarouselIndex = 0;
   late Animation<double> _fadeAnimation;
-
+  AuthService authServices=AuthService();
+List<dynamic>getAllLiveData=[];
+List<dynamic>getAllupComingData=[];
+List<dynamic>getAllPastData=[];
   @override
   void dispose() {
     _animationController.dispose();
@@ -72,16 +80,42 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
     _animationController.forward();
+    getAllLiveResponse();
+    getAllUpcomingResponse();
+    getAllPastResponse();
   }
-
+ void getAllLiveResponse()async{
+final response=await authServices.getAllLiveData();
+if(response.containsKey('status')&&response['status']==true){
+     setState(() {
+       getAllLiveData=response['ongoing events'];
+     });
+}
+ }
+  void getAllUpcomingResponse()async{
+final response=await authServices.getAllupComingData();
+if(response.containsKey('status')&&response['status']==true){
+     setState(() {
+       getAllupComingData=response['upcoming events'];
+     });
+}
+ }
+  void getAllPastResponse()async{
+final response=await authServices.getAllPastData();
+if(response.containsKey('status')&&response['status']==true){
+     setState(() {
+       getAllPastData=response['past events'];
+     });
+}
+ }
   Drawer _buildDrawer(BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: const Text('Your Name'),
-            accountEmail: const Text('your.email@example.com'),
+            accountName:  Text(Shared().rollNo),
+          accountEmail:  Text('${Shared().rollNo}@aec.edu.in'),
             currentAccountPicture: const CircleAvatar(
               backgroundColor: Colors.white,
               backgroundImage: AssetImage('assets/AT.png'), // Replace with your image path
@@ -158,11 +192,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text('Logout'),
-            onTap: () {
+            onTap: () async{
+              await Shared().logout();
               Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
-              MaterialPageRoute(builder: (context) => Allpastevents()),
+              MaterialPageRoute(builder: (context) => SimpleLoginScreen()),
               );
             },
           ),
@@ -602,31 +637,42 @@ Widget _buildCategoryItem(int index) {
   }
 
   Widget _buildListeningSection() {
-    return SizedBox(
+      return SizedBox(
+      width: 150,
       height: 150,
-      child: ListView(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        children: [
-          _buildListeningCard('assets/ob/ob3.jpg', 'LEO EVENT 8/12'),
-          _buildListeningCard('assets/ob/ob2.jpg', 'ROT EVENT 15/20'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'NSS EVENT 5/15'),
-          _buildListeningCard('assets/ob/ob4.jpg', 'LEO EVENT /12'),
-          _buildListeningCard('assets/ob/ob2.jpg', 'ROT EVENT 15/20'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'NSS EVENT 5/15'),
-
-        ],
-      ),
+        itemCount:getAllLiveData.length ,
+        itemBuilder: (context,index){
+      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', getAllLiveData[index]['eventName']);
+      }),
     );
   }
 
   Widget _buildListeningCard(String imagePath, String episode) {
-    return Container(
+      return GestureDetector(onTap: ()async{
+       List<dynamic>list=[];
+       SharedPreferences prefs=await SharedPreferences.getInstance();
+      final response=await AuthService().getEventDetailsByName(episode);
+      if(response.containsKey('status')&&response['status']==true){
+        print('getEventDetailsByName:$response');
+         setState(() {
+           list=response['eventDetails'];
+         });
+         final event=response['eventDetails'][0];
+         Navigator.push(context, MaterialPageRoute(
+          builder: (context)=>
+          ClubsScreena(clubName: event['clubName'], eventName: event['eventName'], date: DateTime.parse(event['date']), location: event['location'], description: event['details'], list:List<String>.from(event['guest']), rollNo:Shared().rollNo)));
+      }
+    },
+      child:
+    Container(
       width: 150,
       margin: const EdgeInsets.only(left: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image: DecorationImage(
-          image: AssetImage(imagePath),
+          image: NetworkImage(imagePath),
           fit: BoxFit.cover,
         ),
       ),
@@ -641,42 +687,32 @@ Widget _buildCategoryItem(int index) {
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildKnowledgeSection() {
-    return SizedBox(
+     return SizedBox(
+      width: 150,
       height: 150,
-      child: ListView(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        children: [
-          _buildListeningCard('assets/ob/ob3.jpg', 'LEO EVENT 8/12'),
-          _buildListeningCard('assets/ob/ob2.jpg', 'ROT EVENT 15/20'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'NSS EVENT 5/15'),
-          _buildListeningCard('assets/ob/ob4.jpg', 'LEO EVENT /12'),
-          _buildListeningCard('assets/ob/ob2.jpg', 'ROT EVENT 15/20'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'NSS EVENT 5/15'),],
-// Improved code for the selected portion
-// Since t]here is no selected portion, I will provide an improved version of the entire code  ),
-      ),
+        itemCount:getAllupComingData.length ,
+        itemBuilder: (context,index){
+      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', getAllupComingData[index]['eventName']);
+      }),
     );
   }
 
   Widget _buildledgeSection() {
-    return SizedBox(
+     return SizedBox(
+      width: 150,
       height: 150,
-      child: ListView(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        children: [
-          _buildListeningCard('assets/ob/ob2.jpg', 'LEO EVENT 8/42'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'ROT EVENT 15/30'),
-          _buildListeningCard('assets/ob/ob3.jpg', 'NSS EVENT 5/11'),
-          _buildListeningCard('assets/ob/ob4.jpg', 'LEO EVENT 3/12'),
-          _buildListeningCard('assets/ob/ob1.jpg', 'ROT EVENT 5/10'),
-          _buildListeningCard('assets/ob/ob3.jpg', 'NSS EVENT 5/13'),],
-// Improved code for the selected portion
-// Since there is no selected portion, I will provide an improved version of the entire code  ),
-      ),
+        itemCount:getAllPastData.length ,
+        itemBuilder: (context,index){
+      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', getAllPastData[index]['eventName']);
+      }),
     );
   }
 

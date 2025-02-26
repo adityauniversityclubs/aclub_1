@@ -27,12 +27,14 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
     liveEvents();
     upComingEvents();
     pastEvents();
+    getAllClubMembers();
   }
   late TabController _tabController;
       AuthService authService=AuthService();
   List<dynamic>liveEventList=[];
    List<dynamic>upComingEventList=[];
     List<dynamic>pastEventList=[];
+    List<dynamic>clubMembersList=[];
   //get live events data
   void liveEvents()async{
     final response=await authService.getLiveData(widget.clubId);
@@ -63,6 +65,19 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
       setState(() {
         pastEventList=response['past events'];
       });
+    }
+  }
+
+  //getAllClubMemebrs
+  void getAllClubMembers()async{
+    final response=await authService.getAllClubMembers(widget.clubId);
+    if(response.containsKey('status')&&response['status']==true){
+      print('getAllClubMembers:$response');
+      setState(() {
+        clubMembersList=response['members'];
+      });
+    }else{
+      print(response['msg']??"unknown error");
     }
   }
   // Data for the bio (Club info), events, and about sections
@@ -147,7 +162,7 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
   }
 
   /// Build a card for the club's bio (clickable)
-  Widget buildBioCard(BuildContext context, Map<String, dynamic> item) {
+  Widget buildBioCard(BuildContext context,String firstName,String role,String rollNo,String lastName){
     final screenWidth = MediaQuery.of(context).size.width;
     final cardMargin = screenWidth * 0.02;
 
@@ -157,7 +172,7 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailScreen(data: item),
+            builder: (context) => DetailScreen(firstName: firstName,lastName: lastName,),
           ),
         );
       },
@@ -171,17 +186,19 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
               vertical: cardMargin, horizontal: cardMargin * 2),
           leading: CircleAvatar(
             radius: screenWidth * 0.07,
-            backgroundImage: AssetImage(item['profile']),
+            backgroundImage:const NetworkImage('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
           ),
           title: Text(
-            item['organization'],
+           firstName,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: screenWidth * 0.045,
             ),
           ),
-          subtitle: Text(
-            'Club Leader: ${item['speaker']}\nYear: ${item['time']} | Branch: ${item['duration']}',
+          subtitle: role=='admin'? Text(
+            'Club Leader: $role\n Roll NO: $rollNo',
+          ): Text(
+            'Club Member: $role\n Roll NO: $rollNo',
           ),
         ),
       ),
@@ -298,9 +315,9 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
 
           // Tab 2: Club Bio (clickable card)
           ListView.builder(
-            itemCount: groupItems.length,
+            itemCount: clubMembersList.length,
             itemBuilder: (context, index) {
-              return buildBioCard(context, groupItems[index]);
+              return buildBioCard(context,clubMembersList[index]['firstName'],clubMembersList[index]['role'],clubMembersList[index]['rollNo'],clubMembersList[index]['lastName']);
             },
           ),
           // Tab 3: About section (non-clickable UI)
@@ -318,35 +335,37 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
 
 /// Detail Screen (Common for clickable cards)
 class DetailScreen extends StatelessWidget {
-  final Map<String, dynamic> data;
-  const DetailScreen({super.key, required this.data});
+  // final Map<String, dynamic> data;
+  final String firstName;
+  final String lastName;
+  const DetailScreen({super.key ,required this.firstName,required this.lastName});
 
-  Widget buildSocialIcons(BuildContext context, List<String> social) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final iconSize = screenWidth * 0.08;
-    final Map<String, IconData> icons = {
-      'facebook': Icons.facebook,
-      'instagram': Icons.airplanemode_on_outlined,
-      'linkedin': Icons.camera_alt,
-      'web': Icons.language,
-    };
+  // Widget buildSocialIcons(BuildContext context, List<String> social) {
+  //   final screenWidth = MediaQuery.of(context).size.width;
+  //   final iconSize = screenWidth * 0.08;
+  //   final Map<String, IconData> icons = {
+  //     'facebook': Icons.facebook,
+  //     'instagram': Icons.airplanemode_on_outlined,
+  //     'linkedin': Icons.camera_alt,
+  //     'web': Icons.language,
+  //   };
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: social
-          .map(
-            (platform) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Icon(
-                icons[platform],
-                size: iconSize,
-                color: Colors.grey[700],
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: social
+  //         .map(
+  //           (platform) => Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+  //             child: Icon(
+  //               icons[platform],
+  //               size: iconSize,
+  //               color: Colors.grey[700],
+  //             ),
+  //           ),
+  //         )
+  //         .toList(),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -357,7 +376,7 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          data['speaker'],
+          firstName,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -377,15 +396,15 @@ class DetailScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: avatarRadius,
-              backgroundImage: AssetImage(data['profile']),
+              backgroundImage:const NetworkImage('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
             ),
             SizedBox(height: screenWidth * 0.05),
             Text(
-              data['organization'],
+              lastName,
               style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: screenWidth * 0.1),
-            buildSocialIcons(context, data['social']),
+           // buildSocialIcons(context, data['social']),
           ],
         ),
       ),
