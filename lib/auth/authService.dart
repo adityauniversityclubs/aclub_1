@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:aclub/admin/event_selection.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
@@ -254,4 +255,55 @@ Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)asy
   print('response body:${res.body}');
   return jsonDecode(res.body);
 }
+
+
+// to add memeber to a club
+Future<Map<String, dynamic>> addMember(
+    String first, String last, String roll, String? role, String clubId, String phoneNo) async {
+  final res = await http.post(
+    Uri.parse('$baseUrl/users/add-user'),
+    // Uri.parse('https://lh8bs0gl-3001.inc1.devtunnels.ms/user/add-user'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      "firstName": first,
+      "lastName": last,
+      "rollNo": roll,
+      "role": role,
+      "clubId": "GDG",
+      "phoneNo": phoneNo
+    }),
+  );
+
+  print("Response Code: ${res.statusCode}");
+  print("Response Body: ${res.body}");
+
+  return jsonDecode(res.body);
+}
+
+
+//event creation
+Future<Map<String, dynamic>> eventCreation(
+    String eventName, DateTime date,String guest,String location , String clubId, String mainTheme,String details) async {
+      String formattedDate = date.toIso8601String();
+  final res = await http.post(
+    Uri.parse('$baseUrl/events/create-event'),
+    // Uri.parse('https://lh8bs0gl-3001.inc1.devtunnels.ms/user/add-user'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      "eventName": eventName,
+      "date": formattedDate,
+      "guest":guest,
+      "location": location,
+      "clubId": "GDG",
+      "mainTheme": mainTheme,
+      "details":details
+    }),
+  );
+
+  print("Response Code: ${res.statusCode}");
+  print("Response Body: ${res.body}");
+
+  return jsonDecode(res.body);
+}
+
 }

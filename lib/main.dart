@@ -1,19 +1,21 @@
-import 'package:aclub/home/homepage.dart';
 import 'package:aclub/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:aclub/auth/authService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:aclub/home/bottom_Navbar.dart';
+import 'package:aclub/rollno.dart';
 //import 'package:aclub/clubs/club_screen_tab_bar.dart';
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
   String? rollNo = prefs.getString('rollno');
-  runApp( MyApp(startingPage: rollNo != null ? Nav_Bar(val: 0) : SimpleLoginScreen()));
+   await Shared().loadRollNo(); 
+  runApp( MyApp(startingPage:( rollNo != null && rollNo != "" && rollNo.length == 10 )? Nav_Bar(val: 0) : SimpleLoginScreen()));
+
 }
 
 class MyApp extends StatelessWidget {
-  final Widget startingPage;
+  final Widget startingPage; 
   const MyApp({super.key,required this.startingPage});
 
   @override

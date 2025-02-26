@@ -6,13 +6,23 @@ class Shared {
     return _instance;
   }
 
-  Shared._internal();
+  Shared._internal() {
+    loadRollNo();
+  }
 
   String rollNo = '';
   Future<void> saveRollNo(String rollNo) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('rollno', rollNo);
+  rollNo = rollNo;
 }
+
+  Future<void> loadRollNo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    rollNo = prefs.getString('rollno') ?? ''; // Load saved rollNo
+  }
+
+
 Future<void> logout() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.remove('rollno');

@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: screenSize.height * 0.20,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                          colors: [Color(0xFF040737), Color(0xFF040737)],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),

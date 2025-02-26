@@ -55,7 +55,7 @@ class _AllpasteventsState extends State<Allpastevents> {
                             width: 200,
                             height: 100,
                             decoration: BoxDecoration(
-                              color: Colors.blue,
+                              color:  Color(0xFF040737),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             alignment: Alignment.center,

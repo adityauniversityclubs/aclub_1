@@ -2,6 +2,7 @@ import 'package:aclub/home/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:aclub/home/profilePage.dart';
+import 'package:aclub/admin/admin_page.dart';
 import 'package:aclub/home/all_Clubs_page.dart';
 
 class Nav_Bar extends StatefulWidget {
@@ -28,6 +29,8 @@ class _Nav_BarState extends State<Nav_Bar> {
             const HomeScreen(),
             // const MyEPage(),
             // const SizedBox(), // Placeholder for admin screen
+            AdminPage(),
+
             const ProfileScreen(),
           ]
         : [
@@ -38,7 +41,7 @@ class _Nav_BarState extends State<Nav_Bar> {
   }
 
   List<BottomNavigationBarItem> _getNavItems() {
-    if (widget.val == 1) {
+    if (widget.val == 0) {
       return [
         const BottomNavigationBarItem(
           icon: Icon(Iconsax.home),

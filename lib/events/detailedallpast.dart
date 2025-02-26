@@ -48,18 +48,20 @@ class _ClubsScreenState extends State<ClubsScreena>
       appBar: AppBar(
         title: Text(
           '${widget.clubName} Event',
-          style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),
+          style: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold, letterSpacing: 1.5),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor:  Color(0xFF040737),
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: Colors.white,
+          indicatorColor: Color.fromARGB(255, 252, 252, 252),
           labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
           tabs: const [
-            Tab(text: 'Event Details', icon: Icon(Icons.event)),
-            Tab(text: 'Members', icon: Icon(Icons.group)),
-            Tab(text: 'Feedback', icon: Icon(Icons.feedback)),
+            Tab(text: 'Event Details', icon: Icon(Icons.event,color: Colors.white),),
+            Tab(text: 'Members', icon: Icon(Icons.group,color: Colors.white,)),
+            Tab(text: 'FeedbackS', icon: Icon(Icons.feedback,color: Colors.white,)),
           ],
         ),
       ),
@@ -172,7 +174,7 @@ class _EventDetailsTabState extends State<EventDetailsTab> {
           const SizedBox(height: 16),
           Text(
             'Event: ${widget.eventName}',
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge
           ),
           const SizedBox(height: 8),
           Text(
@@ -190,7 +192,7 @@ class _EventDetailsTabState extends State<EventDetailsTab> {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _isRegister ? Colors.grey : Colors.blue,
+                  backgroundColor: _isRegister ?  Color(0xFFFFFF) :  Color(0xFF040737),
                 ),
                 onPressed: _isRegister
                     ? null // Disable button if already registered

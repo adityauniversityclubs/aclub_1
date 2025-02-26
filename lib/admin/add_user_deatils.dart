@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:aclub/auth/authService.dart';
 class UserDetails extends StatefulWidget {
   @override
   _UserDetailsState createState() => _UserDetailsState();
@@ -11,8 +11,17 @@ class _UserDetailsState extends State<UserDetails> {
   final TextEditingController rollNumberController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   String? selectedRole;
-
-  final List<String> roles = ['Club Lead', 'Coordinator', 'Members'];
+AuthService authService=AuthService();
+  final List<String> roles = ['admin', 'coordinator', 'user'];
+  void addMember()async{
+    final response=await authService.addMember(firstNameController.text, lastNameController.text,rollNumberController.text,selectedRole, 'GDG', phoneNumberController.text);
+    _submitDetails();
+    if(response.containsKey('status')&&response['status']==true){
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Successfully added',),backgroundColor: Colors.green,));
+    }else{
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response['msg'],),backgroundColor: Colors.red,));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +51,7 @@ class _UserDetailsState extends State<UserDetails> {
               _buildDropdown('Select Role'),
               SizedBox(height: screenHeight * 0.03),
               ElevatedButton(
-                onPressed: _submitDetails,
+                onPressed: addMember,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF040737),
                   padding: EdgeInsets.symmetric(

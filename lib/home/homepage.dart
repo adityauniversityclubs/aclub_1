@@ -1,15 +1,3 @@
-// import 'package:aclub/views/club/club_a.dart';
-// import 'package:aclub/views/club/cluba.dart';
-// import 'package:aclub/views/club/events.dart';
-// import 'package:aclub/views/club/org.dart';
-// import 'package:aclub/views/auth/login.dart';
-// import 'package:aclub/views/events/event_screen.dart';
-// import 'package:aclub/views/events/event_screena.dart';
-// import 'package:aclub/views/events/event_screenb.dart';
-// import 'package:aclub/views/events/thb.dart';
-// import 'package:aclub/views/home/about.dart';
-// import 'package:aclub/views/home/faq.dart';
-// import 'package:aclub/views/notify/ntf.dart';
 import 'package:aclub/auth/login.dart';
 import 'package:aclub/events/allpastevents.dart';
 import 'package:aclub/rollno.dart';
@@ -21,6 +9,7 @@ import 'package:aclub/clubs/club_screen_tab_bar.dart';
 import 'package:aclub/events/detailedallpast.dart';
 import 'package:aclub/home/bottom_Navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 // import 'settings.dart';
 // import 'contact.dart';
 
@@ -46,9 +35,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
   final List<String> carouselItems = [
-    'assets/ob/ob1.jpg',
-    'assets/ob/ob2.jpg',
-    'assets/ob/ob3.jpg',
+    'assets/gdg/gdg_2.jpg', //D:\pro\aclub\assets\gdg\gdg_2.jpg
+    'assets/leo/leo_2.jpg',   // D:\pro\aclub\assets\leo\leo_2.jpg
+    'assets/red/red_6.jpg',  //D:\pro\aclub\assets\red\red_6.jpg
+    'assets/rot/rot_5.jpg',             
   ];
 
   late AnimationController _animationController;
@@ -109,6 +99,7 @@ if(response.containsKey('status')&&response['status']==true){
 }
  }
   Drawer _buildDrawer(BuildContext context) {
+    // print('https://info.aec.edu.in/AEC/StudentPhotos/${Shared().rollNo}.jpg');
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -116,76 +107,92 @@ if(response.containsKey('status')&&response['status']==true){
           UserAccountsDrawerHeader(
             accountName:  Text(Shared().rollNo),
           accountEmail:  Text('${Shared().rollNo}@aec.edu.in'),
-            currentAccountPicture: const CircleAvatar(
-              backgroundColor: Colors.white,
-              backgroundImage: AssetImage('assets/AT.png'), // Replace with your image path
+            currentAccountPicture: Container(
+              height: 100,
+              width: 100,
+              // color: ,
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), 
+             ) ,
+              
+child: ClipRRect(borderRadius: BorderRadius.circular(20),
+  child: CachedNetworkImage(
+    imageUrl: 'https://info.aec.edu.in/AEC/StudentPhotos/${Shared().rollNo}.jpg',
+    placeholder: (context, url) => CircularProgressIndicator(),
+    errorWidget: (context, url, error) {
+      print('Image load error: $error');
+      return Icon(Icons.error, size: 40, color: Colors.red);
+    },
+    fit: BoxFit.cover,
+  ),
+),
 
-            ),
-            decoration: const BoxDecoration(
-              color: Colors.blue,
-            ),
+            // Image.network('https://info.aec.edu.in/AEC/StudentPhotos/22a91a0565.jpg')
+            )
+            ,decoration: BoxDecoration(
+    color:  Color(0xFF040737), // Change this to your desired background color
+  ),
           ),
           ListTile(
-            leading: const Icon(Icons.home, color: Colors.blue),
+            leading: const Icon(Icons.home, color:  Color(0xFF040737)),
             title: const Text('Home'),
             onTap: () => Navigator.pop(context),
           ),
           ListTile(
-            leading: const Icon(Icons.event, color: Colors.blue),
+            leading: const Icon(Icons.event, color:  Color(0xFF040737)),
             title: const Text('Events'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>Allpastevents()
-             ),
-              );
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) =>Allpastevents()
+            //  ),
+            //   );
             },
           ),
           ListTile(
-            leading: const Icon(Icons.settings, color: Colors.blue),
+            leading: const Icon(Icons.settings, color:  Color(0xFF040737)),
             title: const Text('Settings'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Allpastevents()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => Allpastevents()),
+              // );
             },
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.contact_page, color: Colors.blue),
+            leading: const Icon(Icons.contact_page, color:  Color(0xFF040737)),
             title: const Text('Contact Us'),
                         onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-               MaterialPageRoute(builder: (context) => Allpastevents()),
-              );
+              // Navigator.push(
+              //   context,
+              //  MaterialPageRoute(builder: (context) => Allpastevents()),
+              // );
             },
           ),
           ListTile(
-            leading: const Icon(Icons.help, color: Colors.blue),
+            leading: const Icon(Icons.help, color:  Color(0xFF040737)),
             title: const Text('Help & Support'),
                                     onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-               MaterialPageRoute(builder: (context) => Allpastevents()),
-              );
+              // Navigator.push(
+              //   context,
+              //  MaterialPageRoute(builder: (context) => Allpastevents()),
+              // );
             },
             
           ),
           ListTile(
-            leading: const Icon(Icons.feedback, color: Colors.blue),
+            leading: const Icon(Icons.feedback, color:  Color(0xFF040737)),
             title: const Text('Feedback'),
                                                 onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-               MaterialPageRoute(builder: (context) => Allpastevents()),
-              );
+              // Navigator.push(
+              //   context,
+              //  MaterialPageRoute(builder: (context) => Allpastevents()),
+              // );
             },
           ),
           const Divider(),
@@ -214,10 +221,10 @@ SliverAppBar _buildAppBar(ThemeData theme) {
     elevation: 0,
     title: Center(
       child: Transform.translate(
-        offset: const Offset(0, -15), // Adjust the vertical offset as needed
-        child: Image.network(
-          'assets/logo/ACLUB_.png',
-          height: 95, // just logo size as needed
+        offset: const Offset(0, 0), // Adjust the vertical offset as needed
+        child: Image.asset(
+          'assets/AU_1.png',
+          height: 90, // just logo size as needed
           fit: BoxFit.contain,
         ),
       ),
@@ -232,13 +239,15 @@ SliverAppBar _buildAppBar(ThemeData theme) {
   Widget _buildCarouselSection(Size size) {
     return Column(
       children: [
+        SizedBox(height: 5,),
         CarouselSlider(
           items: carouselItems.map((item) => _buildCarouselItem(item, size)).toList(),
           options: CarouselOptions(
             height: size.height * 0.25,
             autoPlay: true,
+            autoPlayAnimationDuration: Duration(milliseconds: 1000),
             enlargeCenterPage: true,
-            viewportFraction: 0.8,
+            viewportFraction: 0.9,
             onPageChanged: (index, reason) {
               setState(() => _currentCarouselIndex = index);
             },
@@ -258,7 +267,7 @@ SliverAppBar _buildAppBar(ThemeData theme) {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: DecorationImage(
-          image: NetworkImage(imagePath),
+          image: AssetImage(imagePath),
           fit: BoxFit.cover,
         ),
         boxShadow: [
@@ -319,7 +328,7 @@ SliverAppBar _buildAppBar(ThemeData theme) {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: _currentCarouselIndex == entry.key
-                  ? Colors.blue
+                  ?  Color(0xFF040737)
                   : Colors.grey.withOpacity(0.4),
             ),
           ),
@@ -366,13 +375,12 @@ Widget _buildCategoryRow() {
 
 
 Widget _buildCategoryItem(int index) {
-  final List<Map<String, dynamic>> categories = [
-    {'name': 'SAC', 'image': 'assets/clublogo/SAC.png', 'color': Colors.grey},
-    {'name': 'LEO', 'image': 'assets/clublogo/LEO.png', 'color': Colors.grey},
-    {'name': 'GDG', 'image': 'assets/clublogo/GDG.png', 'color': Colors.grey},
-    {'name': 'ROT', 'image': 'assets/clublogo/ROT.png', 'color': Colors.grey},
-    {'name': 'NSS', 'image': 'assets/clublogo/NSS.png', 'color': Colors.grey},
-    {'name': 'RED', 'image': 'assets/clublogo/RED.png', 'color': Colors.grey},
+  final List<String> categories = [
+'assets/ROT.png',
+'assets/GDG.jpg',
+'assets/IEEE.png',
+'assets/NSS.png',
+'assets/RED.png'
   ];
 
   return Column(
@@ -385,16 +393,16 @@ Widget _buildCategoryItem(int index) {
           
           height: 70,
           decoration: BoxDecoration(
-            color: categories[index]['color'].withOpacity(0.1),
+           
             shape: BoxShape.circle,
             border: Border.all(
-              color: categories[index]['color'].withOpacity(0.3),
+              color:Colors.white,
               width: 2,
             ),
           ),
           child: ClipOval(
             child: Image.asset(
-              categories[index]['image'],
+              categories[index],
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
@@ -594,10 +602,10 @@ Widget _buildCategoryItem(int index) {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
+                  color:  Color(0xFF040737).withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Iconsax.info_circle, color: Colors.blue),
+                child: const Icon(Iconsax.info_circle, color:  Color(0xFF040737)),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -681,6 +689,7 @@ Widget _buildCategoryItem(int index) {
         child: Container(
           padding: const EdgeInsets.all(8),
           color: Colors.black54,
+
           child: Text(
             episode,
             style: const TextStyle(color: Colors.white, fontSize: 12),
@@ -722,12 +731,7 @@ Widget _buildCategoryItem(int index) {
       children: [
         IconButton(
           icon: Icon(Iconsax.notification, color: Theme.of(context).colorScheme.onSurface),
-          onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Allpastevents(),
-        ),
-      ),
+          onPressed: () => () {}
         ),
         Positioned(
           right: 8,
@@ -773,33 +777,33 @@ slivers: [
       _buildCarouselSection(size),
       const SizedBox(height: 24),
       _buildSectionHeader('Clubs', onSeeAll: () {
-        Navigator.push(
-          context,
-                MaterialPageRoute(builder: (context) => Allpastevents()),
-        );
+        // Navigator.push(
+        //   context,
+        //         MaterialPageRoute(builder: (context) => Allpastevents()),
+        // );
       }),
       _buildCategoryRow(),
       _buildSectionHeader('🔴Live Events', onSeeAll: () {
-        Navigator.push(
-          context,
-                MaterialPageRoute(builder: (context) => Allpastevents()),
-        );
+        // Navigator.push(
+        //   context,
+        //         MaterialPageRoute(builder: (context) => Allpastevents()),
+        // );
       }),
       _buildListeningSection(),
       const SizedBox(height: 20),
       _buildSectionHeader('Upcooming Events', onSeeAll: () {
-        Navigator.push(
-          context,
-                MaterialPageRoute(builder: (context) =>Allpastevents()),
-        );
+        // Navigator.push(
+        //   context,
+        //         MaterialPageRoute(builder: (context) =>Allpastevents()),
+        // );
       }),
       _buildKnowledgeSection(),
       const SizedBox(height: 18),
       _buildSectionHeader(' Past Events', onSeeAll: () {
-        Navigator.push(
-          context,
-                MaterialPageRoute(builder: (context) => Allpastevents()),
-        );
+        // Navigator.push(
+        //   context,
+        //         MaterialPageRoute(builder: (context) => Allpastevents()),
+        // );
       }),
       _buildledgeSection(),
       const SizedBox(height: 18),
@@ -812,10 +816,10 @@ slivers: [
       // _buildEventGrid(),
       // const SizedBox(height: 18),
       _buildSectionHeader('Latest News', onSeeAll: () {
-        Navigator.push(
-          context,
-                MaterialPageRoute(builder: (context) => Allpastevents()),
-        );
+        // Navigator.push(
+        //   context,
+        //         MaterialPageRoute(builder: (context) => Allpastevents()),
+        // );
       }),
       _buildNewsList(),
       const SizedBox(height: 20),

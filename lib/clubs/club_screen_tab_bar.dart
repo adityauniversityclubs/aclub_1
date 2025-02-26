@@ -259,7 +259,7 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor:  Color(0xFF040737),
         elevation: 4,
         shadowColor: Colors.black45,
         shape: const RoundedRectangleBorder(
@@ -317,7 +317,7 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
           ListView.builder(
             itemCount: clubMembersList.length,
             itemBuilder: (context, index) {
-              return buildBioCard(context,clubMembersList[index]['firstName'],clubMembersList[index]['role'],clubMembersList[index]['rollNo'],clubMembersList[index]['lastName']);
+              return  buildBioCard(context,clubMembersList[index]['firstName'],clubMembersList[index]['role'],clubMembersList[index]['rollNo'],clubMembersList[index]['lastName']);
             },
           ),
           // Tab 3: About section (non-clickable UI)
@@ -359,7 +359,7 @@ class DetailScreen extends StatelessWidget {
   //             child: Icon(
   //               icons[platform],
   //               size: iconSize,
-  //               color: Colors.grey[700],
+  //               color:  Color(0xFFFFFF)[700],
   //             ),
   //           ),
   //         )
@@ -438,26 +438,26 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
             delegate: SliverChildListDelegate([
 
               _buildSectionHeader('🔴Live Events', onSeeAll: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>Allpastevents()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) =>Allpastevents()),
+                // );
               }),
               _buildListeningSection(widget.liveList),
               const SizedBox(height: 20),
               _buildSectionHeader('Upcoming Events', onSeeAll: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Allpastevents()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Allpastevents()),
+                // );
               }),
               _buildledgeSection(widget.upComingList),
               const SizedBox(height: 18),
               _buildSectionHeader('Past Events', onSeeAll: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => (Allpastevents())),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => (Allpastevents())),
+                // );
               }),
               _buildPastSection(widget.pastList),
             ]),
@@ -683,7 +683,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
                     Text(
                       newsItems[index]['date'],
                       style: TextStyle(
-                        color: Colors.grey.shade600,
+                        color:  Color(0xFFFFFF),
                         fontSize: 12,
                       ),
                     ),
@@ -696,7 +696,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
           Text(
             newsItems[index]['excerpt'],
             style: TextStyle(
-              color: Colors.grey.shade700,
+              color:  Color(0xFFFFFF),
               fontSize: 13,
             ),
           ),
@@ -706,14 +706,14 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
   }
 
   Widget _buildListeningSection(List<dynamic>list) {
-    return SizedBox(
+    return list.isEmpty?Center(child: Text("Events are not there",style: TextStyle(fontSize: 30,color: Colors.black),),): SizedBox(
       width: 150,
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount:list.length ,
         itemBuilder: (context,index){
-      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName'],);
+      return _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName'],);
       }),
     );
   }
@@ -774,7 +774,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
 
 
   Widget _buildledgeSection(List<dynamic>list) {
-    return SizedBox(
+    return list.isEmpty?Center(child: Text("Events are not there",style: TextStyle(fontSize: 30,color: Colors.black),),):SizedBox(
       width: 150,
       height: 150,
       child: ListView.builder(
@@ -788,14 +788,14 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
 
 
 Widget _buildPastSection(List<dynamic>list) {
-    return SizedBox(
+    return list.isEmpty?Center(child: Text("Events are not there",style: TextStyle(fontSize: 30,color: Colors.black),),):SizedBox(
       width: 150,
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount:list.length ,
         itemBuilder: (context,index){
-      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName']);
+      return _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName']);
       }),
     );
   }
