@@ -1,9 +1,9 @@
-import 'package:aclub/auth/login.dart';
+import './auth/login.dart';
 import 'package:flutter/material.dart';
-import 'package:aclub/auth/authService.dart';
+import './auth/authService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:aclub/home/bottom_Navbar.dart';
-import 'package:aclub/rollno.dart';
+import './home/bottom_Navbar.dart';
+import './rollno.dart';
 //import 'package:aclub/clubs/club_screen_tab_bar.dart';
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +55,7 @@ class _SimpleRegisterScreenState extends State<SimpleRegisterScreen> {
   bool isValid = true;
 
   void _resetErrorText() {
-    setState(() {
+    setState(() { 
       firstnameError = null;
       lastnameError = null;
       rollNoError = null;

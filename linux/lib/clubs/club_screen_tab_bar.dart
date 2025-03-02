@@ -1,8 +1,8 @@
 
-import 'package:aclub/auth/authService.dart';
-import 'package:aclub/events/allpastevents.dart';
-import 'package:aclub/events/detailedallpast.dart';
-import 'package:aclub/rollno.dart';
+import '../auth/authService.dart';
+import '../events/allpastevents.dart';
+import '../events/detailedallpast.dart';
+import '../rollno.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 // import 'package:aclub/events/detailedallpast.dart';
@@ -706,7 +706,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
   }
 
   Widget _buildListeningSection(List<dynamic>list) {
-    return list.isEmpty?Center(child: Text("Events are not there",style: TextStyle(fontSize: 30,color: Colors.black),),): SizedBox(
+    return list.isEmpty?Center(child:Image.asset('assets/noevent.jpg') ,): SizedBox(
       width: 150,
       height: 150,
       child: ListView.builder(
@@ -774,7 +774,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
 
 
   Widget _buildledgeSection(List<dynamic>list) {
-    return list.isEmpty?Center(child: Text("Events are not there",style: TextStyle(fontSize: 30,color: Colors.black),),):SizedBox(
+    return list.isEmpty?Center(child: Image.asset('assets/noevent.jpg'),):SizedBox(
       width: 150,
       height: 150,
       child: ListView.builder(
@@ -788,7 +788,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
 
 
 Widget _buildPastSection(List<dynamic>list) {
-    return list.isEmpty?Center(child: Text("Events are not there",style: TextStyle(fontSize: 30,color: Colors.black),),):SizedBox(
+    return list.isEmpty?Center(child: Image.asset('assets/noevent.jpg'),):SizedBox(
       width: 150,
       height: 150,
       child: ListView.builder(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aclub/auth/authService.dart';
+import '../auth/authService.dart';
 class UserDetails extends StatefulWidget {
   @override
   _UserDetailsState createState() => _UserDetailsState();

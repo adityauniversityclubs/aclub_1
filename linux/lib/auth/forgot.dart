@@ -1,4 +1,4 @@
-import 'package:aclub/auth/login.dart';
+import '../auth/login.dart';
 import 'package:flutter/material.dart';
 import 'authService.dart';
 import 'otp_page.dart';

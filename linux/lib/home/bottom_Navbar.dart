@@ -1,9 +1,9 @@
-import 'package:aclub/home/homepage.dart';
+import '../home/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:aclub/home/profilePage.dart';
-import 'package:aclub/admin/admin_page.dart';
-import 'package:aclub/home/all_Clubs_page.dart';
+//import 'package:iconsax/iconsax.dart';
+import '../home/profilePage.dart';
+import '../admin/admin_page.dart';
+import '../home/all_Clubs_page.dart';
 
 class Nav_Bar extends StatefulWidget {
   final int val; // 0 for normal user, 1 for admin
@@ -40,44 +40,25 @@ class _Nav_BarState extends State<Nav_Bar> {
           ];
   }
 
-  List<BottomNavigationBarItem> _getNavItems() {
-    if (widget.val == 0) {
-      return [
-        const BottomNavigationBarItem(
-          icon: Icon(Iconsax.home),
-          label: 'Home',
-        ),
-        // const BottomNavigationBarItem(
-        //   icon: Icon(Iconsax.group),
-        //   label: 'Chats',
-        // ),
-        const BottomNavigationBarItem(
-          icon: Icon(Iconsax.setting),
-          label: 'Admin',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(Iconsax.user),
-          label: 'Profile',
-        ),
-      ];
-    } else {
-      return [
-        const BottomNavigationBarItem(
-          icon: Icon(Iconsax.home),
-          label: 'Home',
-        ),
-// BottomNavigationBarItem(
-//   icon: Icon(Icons.groups_outlined),
-//   label: 'Clubs',
-// )
-// ,
-        const BottomNavigationBarItem(
-          icon: Icon(Iconsax.user),
-          label: 'Profile',
-        ),
-      ];
-    }
-  }
+List<BottomNavigationBarItem> _getNavItems() {
+  return [
+    BottomNavigationBarItem(
+      icon: Icon(_currentIndex == 0 ? Icons.home : Icons.home_outlined,color: Colors.white,), // Filled when selected
+      label: 'Home',
+    ),
+    if (widget.val == 0) // Only show for normal users
+      BottomNavigationBarItem(
+        icon: Icon(_currentIndex == 1 ? Icons.admin_panel_settings : Icons.admin_panel_settings_outlined,color: Colors.white),
+        label: 'Admin',
+      ),
+    BottomNavigationBarItem(
+      icon: Icon(_currentIndex == (widget.val == 0 ? 2 : 1) ? Icons.person : Icons.person_outline,color: Colors.white),
+      label: 'Profile',
+    ),
+  ];
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,12 +73,13 @@ class _Nav_BarState extends State<Nav_Bar> {
 
   Widget _buildWhatsAppStyleNavBar() {
     return BottomNavigationBar(
+      backgroundColor: Color(0xff040737),
       currentIndex: _currentIndex,
       onTap: (index) => setState(() => _currentIndex = index),
       items: _getNavItems(),
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: const Color.fromARGB(255, 70, 0, 168), // WhatsApp green
-      unselectedItemColor: Colors.grey[600],
+      selectedItemColor: Colors.white, // WhatsApp green
+      unselectedItemColor: Colors.white70,
       selectedLabelStyle: const TextStyle(fontSize: 12),
       unselectedLabelStyle: const TextStyle(fontSize: 12),
       iconSize: 28,

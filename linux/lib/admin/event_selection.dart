@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:aclub/auth/authService.dart';
+import '../auth/authService.dart';
 import 'package:intl/intl.dart';
 
 class EventCreation extends StatefulWidget {

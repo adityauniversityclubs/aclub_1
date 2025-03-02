@@ -1,5 +1,5 @@
-import 'package:aclub/auth/authService.dart';
-import 'package:aclub/rollno.dart';
+import '../auth/authService.dart';
+import '../rollno.dart';
 import 'package:flutter/material.dart';
 /// Main Screen with Tabs
 class ClubsScreena extends StatefulWidget {

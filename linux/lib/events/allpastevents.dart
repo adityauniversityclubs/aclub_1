@@ -1,7 +1,7 @@
 // import 'package:aclub/events/detailedallpast.dart';
 // import 'package:aclub/rollno.dart';
 import 'package:flutter/material.dart';
-import 'package:aclub/auth/authService.dart';
+import '../auth/authService.dart';
 
 class Allpastevents extends StatefulWidget {
   const Allpastevents({super.key});

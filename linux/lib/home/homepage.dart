@@ -1,13 +1,15 @@
-import 'package:aclub/auth/login.dart';
-import 'package:aclub/events/allpastevents.dart';
-import 'package:aclub/rollno.dart';
+import 'package:flutter/widgets.dart';
+
+import '../auth/login.dart';
+import '../events/allpastevents.dart';
+import '../rollno.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:aclub/auth/authService.dart';
-import 'package:aclub/clubs/club_screen_tab_bar.dart';
-import 'package:aclub/events/detailedallpast.dart';
-import 'package:aclub/home/bottom_Navbar.dart';
+import '../auth/authService.dart';
+import '../clubs/club_screen_tab_bar.dart';
+import '../events/detailedallpast.dart';
+import '../home/bottom_Navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 // import 'settings.dart';
@@ -35,10 +37,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
   final List<String> carouselItems = [
-    'assets/gdg/gdg_2.jpg', //D:\pro\aclub\assets\gdg\gdg_2.jpg
-    'assets/leo/leo_2.jpg',   // D:\pro\aclub\assets\leo\leo_2.jpg
-    'assets/red/red_6.jpg',  //D:\pro\aclub\assets\red\red_6.jpg
-    'assets/rot/rot_5.jpg',             
+    'gdg/gdg_2.jpg', //D:\pro\aclub\assets\gdg\gdg_2.jpg
+    'leo/leo_2.jpg',   // D:\pro\aclub\assets\leo\leo_2.jpg
+    'red/red_6.jpg',  //D:\pro\aclub\assets\red\red_6.jpg
+    'rot/rot_5.jpg',             
   ];
 
   late AnimationController _animationController;
@@ -101,6 +103,8 @@ if(response.containsKey('status')&&response['status']==true){
   Drawer _buildDrawer(BuildContext context) {
     // print('https://info.aec.edu.in/AEC/StudentPhotos/${Shared().rollNo}.jpg');
     return Drawer(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -217,7 +221,7 @@ SliverAppBar _buildAppBar(ThemeData theme) {
   return SliverAppBar(
     floating: true,
     snap: true,
-    backgroundColor: theme.colorScheme.surface,
+    backgroundColor: Color(0xff040737),
     elevation: 0,
     title: Center(
       child: Transform.translate(
@@ -266,10 +270,7 @@ SliverAppBar _buildAppBar(ThemeData theme) {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
-        ),
+        image: DecorationImage(image:AssetImage(imagePath) ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -645,7 +646,7 @@ Widget _buildCategoryItem(int index) {
   }
 
   Widget _buildListeningSection() {
-      return SizedBox(
+      return getAllLiveData.isEmpty?Center(child: Image.asset('assets/noevent.jpg'),): SizedBox(
       width: 150,
       height: 150,
       child: ListView.builder(
@@ -700,7 +701,7 @@ Widget _buildCategoryItem(int index) {
   }
 
   Widget _buildKnowledgeSection() {
-     return SizedBox(
+     return getAllupComingData.isEmpty?Center(child: Image.asset('assets/noevent.jpg'),): SizedBox(
       width: 150,
       height: 150,
       child: ListView.builder(
@@ -713,7 +714,7 @@ Widget _buildCategoryItem(int index) {
   }
 
   Widget _buildledgeSection() {
-     return SizedBox(
+     return getAllPastData.isEmpty?Center(child: Image.asset('assets/noevent.jpg'),): SizedBox(
       width: 150,
       height: 150,
       child: ListView.builder(
@@ -730,7 +731,7 @@ Widget _buildCategoryItem(int index) {
     return Stack(
       children: [
         IconButton(
-          icon: Icon(Iconsax.notification, color: Theme.of(context).colorScheme.onSurface),
+          icon: Icon(Iconsax.notification, color: Colors.white),
           onPressed: () => () {}
         ),
         Positioned(

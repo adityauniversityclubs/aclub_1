@@ -1,10 +1,10 @@
 import 'authService.dart';
 import 'forgot.dart';
-import 'package:aclub/home/homepage.dart';
-import 'package:aclub/rollno.dart';
+import '../home/homepage.dart';
+import '../rollno.dart';
 import 'package:flutter/material.dart';
-import 'package:aclub/main.dart';
-import 'package:aclub/home/bottom_Navbar.dart';
+import '../main.dart';
+import '../home/bottom_Navbar.dart';
 class SimpleLoginScreen extends StatefulWidget {
   final Function(String? rollNumber, String? password)? onSubmitted;
 

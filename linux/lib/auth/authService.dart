@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:aclub/admin/event_selection.dart';
+import '../admin/event_selection.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
