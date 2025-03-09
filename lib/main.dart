@@ -1,17 +1,26 @@
-import './auth/login.dart';
+import 'auth/login.dart';
 import 'package:flutter/material.dart';
-import './auth/authService.dart';
+import 'auth/authService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './home/bottom_Navbar.dart';
-import './rollno.dart';
-//import 'package:aclub/clubs/club_screen_tab_bar.dart';
-void main()async {
-  WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? rollNo = prefs.getString('rollno');
-   await Shared().loadRollNo(); 
-  runApp( MyApp(startingPage:( rollNo != null && rollNo != "" && rollNo.length == 10 )? Nav_Bar(val: 0) : SimpleLoginScreen()));
+import 'home/bottom_Navbar.dart';
+//import 'rollno.dart';
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? rollNo = prefs.getString('rollno');
+  bool? isAdmin = prefs.getBool('isAdmin') ?? false;
+
+  Widget startingPage;
+
+  if (rollNo != null && rollNo.isNotEmpty && rollNo.length == 10) {
+    startingPage = isAdmin ? Nav_Bar(val: 1) : Nav_Bar(val: 0);
+  } else {
+    startingPage = SimpleLoginScreen();
+  }
+
+  runApp(MyApp(startingPage: startingPage));
 }
 
 class MyApp extends StatelessWidget {
@@ -151,7 +160,7 @@ class _SimpleRegisterScreenState extends State<SimpleRegisterScreen> {
               const SizedBox(height: 2),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Sign up to get started!', style: TextStyle(fontSize: 18, color: Colors.black.withOpacity(0.8)),
+                child: Text('Sign up to get started!', style: TextStyle(fontSize: 1, color: Colors.black.withOpacity(0.8)),
                 ),
               ),
               SizedBox(height: screenHeight * 0.03),
@@ -182,7 +191,7 @@ class _SimpleRegisterScreenState extends State<SimpleRegisterScreen> {
                       ),
                       child: const Text(
                         'Sign Up',
-                        style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.w500),
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.01),
@@ -356,7 +365,7 @@ class WaveClipper extends CustomClipper<Path> {
 //               const SizedBox(height: 8),
 //               Text(
 //                 'Sign up to get started!',
-//                 style: TextStyle(fontSize: 18, color: Colors.black.withOpacity(0.6)),
+//                 style: TextStyle(fontSize: 17, color: Colors.black.withOpacity(0.6)),
 //               ),
 //               SizedBox(height: screenHeight * 0.03),
 //               _buildInputField(label: 'First Name', controller: firstcntrl),

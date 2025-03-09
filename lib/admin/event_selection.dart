@@ -81,7 +81,7 @@ void addEvent()async{
                 child: Text(
                   'Submit',
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       color: Colors.white,
                       fontWeight: FontWeight.w500),
                 ),

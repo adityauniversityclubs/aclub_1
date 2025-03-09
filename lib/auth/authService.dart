@@ -305,5 +305,16 @@ Future<Map<String, dynamic>> eventCreation(
 
   return jsonDecode(res.body);
 }
+ Future<Map<String,dynamic>>getUserDetails(String token)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/users/user-details'),
+     headers: {
+      "Authorization":"Bearer $token",
+      'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
 
 }

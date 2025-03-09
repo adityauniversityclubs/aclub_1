@@ -1,9 +1,9 @@
-import '../home/homepage.dart';
+import 'homepage.dart';
 import 'package:flutter/material.dart';
 //import 'package:iconsax/iconsax.dart';
-import '../home/profilePage.dart';
+import 'profilePage.dart';
 import '../admin/admin_page.dart';
-import '../home/all_Clubs_page.dart';
+import 'all_Clubs_page.dart';
 
 class Nav_Bar extends StatefulWidget {
   final int val; // 0 for normal user, 1 for admin
@@ -29,13 +29,12 @@ class _Nav_BarState extends State<Nav_Bar> {
             const HomeScreen(),
             // const MyEPage(),
             // const SizedBox(), // Placeholder for admin screen
-            AdminPage(),
-
             const ProfileScreen(),
           ]
         : [
             const HomeScreen(),
             // const ProfileScreen(),
+            AdminPage(),
             const ProfileScreen(),
           ];
   }
@@ -46,7 +45,7 @@ List<BottomNavigationBarItem> _getNavItems() {
       icon: Icon(_currentIndex == 0 ? Icons.home : Icons.home_outlined,color: Colors.white,), // Filled when selected
       label: 'Home',
     ),
-    if (widget.val == 0) // Only show for normal users
+    if (widget.val == 1) // Only show for normal users
       BottomNavigationBarItem(
         icon: Icon(_currentIndex == 1 ? Icons.admin_panel_settings : Icons.admin_panel_settings_outlined,color: Colors.white),
         label: 'Admin',

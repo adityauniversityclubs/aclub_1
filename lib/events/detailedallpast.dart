@@ -117,7 +117,7 @@ class _EventDetailsTabState extends State<EventDetailsTab> {
 
   void registerStatus() async {
     final response =
-        await authService.regestrationStatus(widget.eventName,Shared().rollNo);
+        await authService.regestrationStatus(widget.eventName,Shared().token);
     if (response.containsKey('status') && response['status'] == true) {
       setState(() {
         _isRegister = true; // Update UI
@@ -132,7 +132,7 @@ class _EventDetailsTabState extends State<EventDetailsTab> {
 
   void registerEvent() async {
     final response =
-        await authService.registerEvent(widget.eventName,Shared().rollNo);
+        await authService.registerEvent(widget.eventName,Shared().token);
     if (response.containsKey('status') && response['status'] == true) {
       setState(() {
         _isRegister = true; // Update status after successful registration
@@ -199,7 +199,7 @@ class _EventDetailsTabState extends State<EventDetailsTab> {
                     : () {
                         registerEvent(); // Call register function
                       },
-                child: Text(_isRegister ? 'Registered' : 'Register'),
+                child: Text(_isRegister ? 'Registered' : 'Register',style:TextStyle(color: _isRegister?Colors.grey:Colors.white)),
               ),
             ],
           ),

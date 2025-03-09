@@ -267,15 +267,7 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
             bottom: Radius.circular(20),
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // Add notification action here
-            },
-            tooltip: 'Notifications',
-          ),
-        ],
+        
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
@@ -314,11 +306,18 @@ class _ClubsScreen_aState extends State<ClubsScreen_a>
           // Tab 1: Events (non-clickable UI)
 
           // Tab 2: Club Bio (clickable card)
-          ListView.builder(
-            itemCount: clubMembersList.length,
-            itemBuilder: (context, index) {
-              return  buildBioCard(context,clubMembersList[index]['firstName'],clubMembersList[index]['role'],clubMembersList[index]['rollNo'],clubMembersList[index]['lastName']);
-            },
+          Column(
+            children: [
+              Text('Members: ${clubMembersList.length}',style: TextStyle(fontSize: 20),),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: clubMembersList.length,
+                  itemBuilder: (context, index) {
+                    return  buildBioCard(context,clubMembersList[index]['firstName'],clubMembersList[index]['role'],clubMembersList[index]['rollNo'],clubMembersList[index]['lastName']);
+                  },
+                ),
+              ),
+            ],
           ),
           // Tab 3: About section (non-clickable UI)
           ListView.builder(
@@ -460,6 +459,8 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
                 // );
               }),
               _buildPastSection(widget.pastList),
+              
+                     const SizedBox(height: 20)
             ]),
           ),
         ],
@@ -479,11 +480,8 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          if (onSeeAll != null)
-            TextButton(
-              onPressed: onSeeAll,
-              child: const Text('See All'),
-            ),
+          // if (onSeeAll != null)
+          
         ],
       ),
     );
@@ -713,7 +711,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
         scrollDirection: Axis.horizontal,
         itemCount:list.length ,
         itemBuilder: (context,index){
-      return _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName'],);
+      return _buildListeningCard(list[index]['image'], list[index]['eventName'],);
       }),
     );
   }
@@ -730,7 +728,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
          final event=response['eventDetails'][0];
          Navigator.push(context, MaterialPageRoute(
           builder: (context)=>
-          ClubsScreena(clubName: widget.clubName, eventName: event['eventName'], date: DateTime.parse(event['date']), location: event['location'], description: event['details'], list:List<String>.from(event['guest']), rollNo: Shared().rollNo)));
+          ClubsScreena(clubName: widget.clubName, eventName: event['eventName'], date: DateTime.parse(event['date']), location: event['location'], description: event['details'], list:List<String>.from(event['guest']), rollNo: Shared().token)));
       }
     },
       child: Container(
@@ -739,7 +737,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           image: DecorationImage(
-            image: NetworkImage(imagePath),
+            image: NetworkImage(episode),
             fit: BoxFit.cover,
           ),
         ),

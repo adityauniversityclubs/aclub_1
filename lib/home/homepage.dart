@@ -9,7 +9,7 @@ import 'package:iconsax/iconsax.dart';
 import '../auth/authService.dart';
 import '../clubs/club_screen_tab_bar.dart';
 import '../events/detailedallpast.dart';
-import '../home/bottom_Navbar.dart';
+import 'bottom_Navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 // import 'settings.dart';
@@ -37,12 +37,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
   final List<String> carouselItems = [
-    'gdg/gdg_2.jpg', //D:\pro\aclub\assets\gdg\gdg_2.jpg
-    'leo/leo_2.jpg',   // D:\pro\aclub\assets\leo\leo_2.jpg
-    'red/red_6.jpg',  //D:\pro\aclub\assets\red\red_6.jpg
-    'rot/rot_5.jpg',             
+    'assets/gdg/gdg_5.jpg', //D:\pro\aclub\assets\gdg\gdg_2.jpg
+    'assets/leo/leo_2.jpg',   // D:\pro\aclub\assets\leo\leo_2.jpg
+    'assets/red/red_6.jpg',  //D:\pro\aclub\assets\red\red_6.jpg
+    'assets/rot/rot_5.jpg',             
   ];
-
+ 
   late AnimationController _animationController;
   final CarouselSliderController _carouselController = CarouselSliderController();
   int _currentCarouselIndex = 0;
@@ -110,6 +110,7 @@ if(response.containsKey('status')&&response['status']==true){
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName:  Text(Shared().rollNo),
+            
           accountEmail:  Text('${Shared().rollNo}@aec.edu.in'),
             currentAccountPicture: Container(
               height: 100,
@@ -270,7 +271,7 @@ SliverAppBar _buildAppBar(ThemeData theme) {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        image: DecorationImage(image:AssetImage(imagePath) ),
+        image: DecorationImage(image:AssetImage(imagePath) , fit: BoxFit.cover),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -351,11 +352,11 @@ SliverAppBar _buildAppBar(ThemeData theme) {
               fontWeight: FontWeight.bold,
             ),
           ),
-          if (onSeeAll != null)
-            TextButton(
-              onPressed: onSeeAll,
-              child: const Text('See All'),
-            ),
+          // if (onSeeAll != null)
+            // TextButton(
+            //   onPressed: onSeeAll,
+            //   child: const Text('See All'),
+            // ),
         ],
       ),
     );

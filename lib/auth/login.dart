@@ -22,13 +22,14 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
   AuthService authService = AuthService();
 
 
-
+bool isAdmin=false;
   @override
   void initState() {
     super.initState();
     rollNumber = '';
     password = '';
   }
+
 
   void _resetErrorText() {
     setState(() {
@@ -51,25 +52,53 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
     }
     return isValid;
   }
+void login() async {
+  _validateInputs();  // Ensure validation is synchronous or await if needed
+  print(rollNumber);
+  print(password);
 
-  void login() async {
-    _validateInputs();
-    print(rollNumber);
-    print(password);
-    final response = await authService.signUser(rollNumber, password);
-    if (response.containsKey('status') && response['status'] == true) {
-       await Shared().saveRollNo(rollNumber);
-      Shared().rollNo = rollNumber;
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Successfully log in")));
+  final response = await authService.signUser(rollNumber, password);
+  
+  if (response.containsKey('status') && response['status'] == true) {
+    await Shared().saveRollNo(rollNumber);
+    await Shared().saveToken(response['token']);
 
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Nav_Bar(val: 0)));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("${response['msg']}")));
+    // Ensure Shared Preferences are updated before fetching details
+    await Shared().init();  
+    String token = Shared().token;  // Now correctly getting the token
+
+    final res = await authService.getUserDetails(token);
+    print(res);
+
+    List<dynamic> details = res['details'];
+    List<dynamic> clubs = details.isNotEmpty && details[0].containsKey('clubs') 
+        ? details[0]['clubs'] 
+        : [];
+
+    for (var club in clubs) {
+      if (club is Map && club['role'] == 'admin') {
+        isAdmin = true;
+       String clubId=club['clubId'];
+       await Shared().saveclubId(clubId, isAdmin);
+        break;
+      }
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Successfully logged in")));
+
+    if (!context.mounted) return;  // Prevent navigation if unmounted
+    Navigator.push(
+        context, 
+        MaterialPageRoute(builder: (context) => isAdmin ? Nav_Bar(val: 1) : Nav_Bar(val: 0))
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("${response['msg']}")));
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {

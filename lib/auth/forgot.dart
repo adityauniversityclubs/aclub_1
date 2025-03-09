@@ -1,4 +1,4 @@
-import '../auth/login.dart';
+import 'login.dart';
 import 'package:flutter/material.dart';
 import 'authService.dart';
 import 'otp_page.dart';
@@ -107,20 +107,24 @@ class _ChangePasswordState extends State<ChangePassword> {
                       keyboardType: TextInputType.text,
                     ),
                     const SizedBox(height: 40),
-                    ElevatedButton(
-                      onPressed: forgotPass,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF040737),
-                        padding: EdgeInsets.symmetric(
-                          vertical: screenHeight * 0.016,
-                          horizontal: screenWidth * 0.37,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      child: const Text('Submit', style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.w500)),
-                    ),
+                   ElevatedButton(
+  onPressed: forgotPass,
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Color(0xFF040737),
+    padding: EdgeInsets.symmetric(
+      vertical: screenHeight * 0.016,
+    ),
+    minimumSize: Size(screenWidth * 0.8, 50), // Ensures proper width
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),
+    ),
+  ),
+  child: const Text(
+    'Submit',
+    style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500),
+  ),
+),
+
                   ],
                 ),
               ),

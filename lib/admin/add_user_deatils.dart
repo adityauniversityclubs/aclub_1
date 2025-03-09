@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
-
-class UpdateUserDetails extends StatefulWidget {
+import '../auth/authService.dart';
+class UserDetails extends StatefulWidget {
   @override
-  _UpdateUserDetailsState createState() => _UpdateUserDetailsState();
+  _UserDetailsState createState() => _UserDetailsState();
 }
 
-class _UpdateUserDetailsState extends State<UpdateUserDetails> {
+class _UserDetailsState extends State<UserDetails> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController rollNumberController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   String? selectedRole;
-
-  final List<String> roles = ['Club Lead', 'Coordinator', 'Members'];
+AuthService authService=AuthService();
+  final List<String> roles = ['admin', 'coordinator', 'user'];
+  void addMember()async{
+    final response=await authService.addMember(firstNameController.text, lastNameController.text,rollNumberController.text,selectedRole, 'GDG', phoneNumberController.text);
+    _submitDetails();
+    if(response.containsKey('status')&&response['status']==true){
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Successfully added',),backgroundColor: Colors.green,));
+    }else{
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response['msg'],),backgroundColor: Colors.red,));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +30,7 @@ class _UpdateUserDetailsState extends State<UpdateUserDetails> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update User Details', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+        title: Text('User Details', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
         backgroundColor: Color(0xFF040737),
         iconTheme: IconThemeData(color: Colors.white),
       ),
@@ -42,18 +51,18 @@ class _UpdateUserDetailsState extends State<UpdateUserDetails> {
               _buildDropdown('Select Role'),
               SizedBox(height: screenHeight * 0.03),
               ElevatedButton(
-                onPressed: _updateDetails,
+                onPressed: addMember,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF040737),
                   padding: EdgeInsets.symmetric(
                     vertical: screenHeight * 0.016,
-                    horizontal: screenWidth * 0.3,
+                    horizontal: screenWidth * 0.37,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text('Update', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500)),
+                child: Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500)),
               ),
             ],
           ),
@@ -95,11 +104,11 @@ class _UpdateUserDetailsState extends State<UpdateUserDetails> {
     );
   }
 
-  void _updateDetails() {
-    print('Updated First Name: ${firstNameController.text}');
-    print('Updated Last Name: ${lastNameController.text}');
-    print('Updated Roll Number: ${rollNumberController.text}');
-    print('Updated Phone Number: ${phoneNumberController.text}');
-    print('Updated Role: $selectedRole');
+  void _submitDetails() {
+    print('First Name: ${firstNameController.text}');
+    print('Last Name: ${lastNameController.text}');
+    print('Roll Number: ${rollNumberController.text}');
+    print('Phone Number: ${phoneNumberController.text}');
+    print('Role: ${selectedRole ?? 'No role selected'}');
   }
 }

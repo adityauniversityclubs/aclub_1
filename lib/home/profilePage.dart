@@ -1,5 +1,7 @@
 //Updated Profile Screen
 import 'package:flutter/material.dart';
+import 'package:aclub/rollno.dart';
+import 'package:aclub/auth/authService.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -9,14 +11,76 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final String profileImageUrl = 'assets/boy.png'; // Local asset path
-  final String studentName = 'B Prudvi Satya Teja';
-  final String rollNo = '22A91A0565';
-  final String branch = 'CSE';
-  final String campus = 'AEC';
-  final String year = '3rd Year';
-  final String clubMember = 'G D G';
-  final int eventsParticipated = 5;
+AuthService authService=AuthService();
+List<dynamic> details = [];
+
+String studentName = '';
+String roll = Shared().rollNo;
+String branch = '';
+String campus = 'AU';
+String year = '3rd Year';
+String clubMember = '';
+int eventsParticipated = 5; // Assume this value is fetched from another source
+String r = Shared().rollNo;
+
+String getBranchFromRoll(String roll) {
+  Map<String, String> branchMap = {
+    "01": "Civil",
+    "02": "EEE",
+    "03": "Mechanical",
+    "04": "ECE",
+    "05": "CSE",
+    "12": "IT",
+    "26": "Mining",
+    "27": "Petroleum",
+    "35": "Agriculture",
+    "44": "Data Science",
+    "61": "AI & ML"
+  };
+
+  if (roll.length >= 8) {
+    String branchCode = roll.substring(6, 8); // Extracting branch code
+    return branchMap[branchCode] ?? "Unknown"; // Default to "Unknown" if not found
+  }
+  return "Unknown"; 
+}
+
+
+
+void getUserDetails() async {
+  final res = await authService.getUserDetails(Shared().token);
+  
+  if (res.containsKey('status') && res['status'] == true) {
+    setState(() {
+      details = res['details'];
+      
+      if (details.isNotEmpty) {
+        var user = details[0];
+        
+        studentName = '${user['firstName']} ${user['lastName']}';
+        
+        // Extracting club memberships
+        List<dynamic> clubs = user['clubs'];
+        clubMember = clubs.map((club) => club['clubId']).join(', '); // Joining club names
+      }
+    });
+  }
+}
+
+
+@override
+void initState() {
+  super.initState();
+  getUserDetails();
+  branch = getBranchFromRoll(roll);
+}
+
+// Profile image URL
+final String profileImageUrl = 'https://info.aec.edu.in/AEC/StudentPhotos/${Shared().rollNo}.jpg';
+
+
+//   List<dynamic> clubs = list['clubs'] ?? [];
+// String clubMember = clubs.isNotEmpty ? clubs.map((club) => club['clubId']).join(', ') : 'No clubs';
 
   bool _showEnlargedImage = false;
 
@@ -66,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             radius: 70,
                             backgroundColor: Colors.white,
                             child: ClipOval(
-                              child: Image.asset(
+                              child: Image.network(
                                 profileImageUrl,
                                 width: 136,
                                 height: 136,
@@ -112,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      // const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: GridView.count(
@@ -125,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             _buildInfoCard(
                               icon: Icons.badge,
                               title: "Roll No",
-                              value: rollNo,
+                              value: roll,
                               color: Colors.amber,
                             ),
                             _buildInfoCard(
@@ -184,7 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           tag: 'profile-image',
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(24),
-                            child: Image.asset(
+                            child: Image.network(
                               profileImageUrl,
                               width: screenSize.width * 0.9,
                               fit: BoxFit.cover,
