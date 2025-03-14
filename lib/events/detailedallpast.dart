@@ -10,6 +10,7 @@ class ClubsScreena extends StatefulWidget {
   final String description;
   final List<String>list;
   final String rollNo;
+  final String imageUrl;
 
   const ClubsScreena({
     super.key,
@@ -20,6 +21,7 @@ class ClubsScreena extends StatefulWidget {
     required this.description,
     required this.list,
     required this.rollNo,
+    required this.imageUrl
   });
 
   @override
@@ -29,6 +31,56 @@ class ClubsScreena extends StatefulWidget {
 class _ClubsScreenState extends State<ClubsScreena>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
+  AuthService authService = AuthService();
+void showDeleteDialog(BuildContext context, String eventName) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Delete Event"),
+        content: Text("Are you sure you want to delete $eventName?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+            },
+            child: Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context); // Close the dialog
+
+              // Send delete request
+              final response = await authService.deleteEvent(eventName);
+
+              if (response.containsKey('status') && response['status'] == "true") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.green,
+                    content: Text(response['msg']),
+                  ),
+                );
+
+                // Remove deleted member from list
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.red,
+                    content: Text(response['msg'] ?? "Failed to delete Event."),
+                  ),
+                );
+              }
+            },
+            child: Text("Delete", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 
   @override
   void initState() {
@@ -45,26 +97,92 @@ class _ClubsScreenState extends State<ClubsScreena>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+
+      //   title: Text(
+      //     '${widget.clubName} Event',
+      //     style: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold, letterSpacing: 1.5),
+      //   ),
+      //   centerTitle: true,
+      //   backgroundColor:  Color(0xFF040737),
+      //   bottom: TabBar(
+      //     controller: _tabController,
+      //     indicatorColor: Color.fromARGB(255, 252, 252, 252),
+      //     labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+      //     labelColor: Colors.white,
+      //     unselectedLabelColor: Colors.white70,
+      //     tabs: const [
+      //       Tab(text: 'Event Details', icon: Icon(Icons.event,color: Colors.white),),
+      //       Tab(text: 'Members', icon: Icon(Icons.group,color: Colors.white,)),
+      //       Tab(text: 'FeedbackS', icon: Icon(Icons.feedback,color: Colors.white,)),
+      //     ],
+      //   ),
+      // ),
       appBar: AppBar(
-        title: Text(
-          '${widget.clubName} Event',
-          style: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold, letterSpacing: 1.5),
-        ),
-        centerTitle: true,
-        backgroundColor:  Color(0xFF040737),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Color.fromARGB(255, 252, 252, 252),
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          tabs: const [
-            Tab(text: 'Event Details', icon: Icon(Icons.event,color: Colors.white),),
-            Tab(text: 'Members', icon: Icon(Icons.group,color: Colors.white,)),
-            Tab(text: 'FeedbackS', icon: Icon(Icons.feedback,color: Colors.white,)),
-          ],
-        ),
+  title: Text(
+    '${widget.clubName} Event',
+    style: const TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      letterSpacing: 1.5,
+    ),
+  ),
+  centerTitle: true,
+  backgroundColor: Color(0xFF040737),
+  actions: [
+    if (Shared().isAdmin) // Show menu only if user is admin
+      PopupMenuButton<String>(
+        icon: Icon(Icons.more_vert, color: Colors.white),
+        onSelected: (value) {
+          if (value == 'update') {
+            // Call update event function
+            print("Update Event Clicked");
+          } else if (value == 'delete') {
+            // Call delete event function
+            print("Delete Event Clicked");
+          }
+        },
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: 'update',
+            child: Row(
+              children: [
+                Icon(Icons.edit, color: Colors.black54),
+                SizedBox(width: 8),
+                Text('Update Event'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 'delete',
+            child: Row(
+              children: [
+                Icon(Icons.delete, color: Colors.red),
+                SizedBox(width: 8),
+                GestureDetector(onTap: (){
+                  showDeleteDialog(context,widget.eventName);
+                },
+                  child: Text('Delete Event')),
+              ],
+            ),
+          ),
+        ],
       ),
+  ],
+  bottom: TabBar(
+    controller: _tabController,
+    indicatorColor: Color.fromARGB(255, 252, 252, 252),
+    labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+    labelColor: Colors.white,
+    unselectedLabelColor: Colors.white70,
+    tabs: const [
+      Tab(text: 'Event Details', icon: Icon(Icons.event, color: Colors.white)),
+      Tab(text: 'Members', icon: Icon(Icons.group, color: Colors.white)),
+      Tab(text: 'Feedbacks', icon: Icon(Icons.feedback, color: Colors.white)),
+    ],
+  ),
+),
+
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -73,6 +191,7 @@ class _ClubsScreenState extends State<ClubsScreena>
             date: widget.date ,
             location: widget.location,
             description: widget.description,
+            imageUrl: widget.imageUrl,
           ),
            MembersTab(eventName: widget.eventName),
           FeedbackTab(
@@ -93,13 +212,14 @@ class EventDetailsTab extends StatefulWidget {
   final DateTime date;
   final String location;
   final String description;
-
+final String imageUrl;
   const EventDetailsTab({
     super.key,
     required this.eventName,
     required this.date,
     required this.location,
     required this.description,
+    required this.imageUrl
   });
 
   @override
@@ -165,8 +285,8 @@ class _EventDetailsTabState extends State<EventDetailsTab> {
             height: 200,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              image: const DecorationImage(
-                image: AssetImage('assets/event_image.jpg'),
+              image:  DecorationImage(
+                image: NetworkImage(widget.imageUrl),
                 fit: BoxFit.cover,
               ),
             ),

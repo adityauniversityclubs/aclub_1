@@ -1,3 +1,4 @@
+import 'package:aclub/rollno.dart';
 import 'package:flutter/material.dart';
 import '../auth/authService.dart';
 class UserDetails extends StatefulWidget {
@@ -14,7 +15,7 @@ class _UserDetailsState extends State<UserDetails> {
 AuthService authService=AuthService();
   final List<String> roles = ['admin', 'coordinator', 'user'];
   void addMember()async{
-    final response=await authService.addMember(firstNameController.text, lastNameController.text,rollNumberController.text,selectedRole, 'GDG', phoneNumberController.text);
+    final response=await authService.addMember(firstNameController.text, lastNameController.text,rollNumberController.text,selectedRole,Shared().clubId, phoneNumberController.text);
     _submitDetails();
     if(response.containsKey('status')&&response['status']==true){
 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Successfully added',),backgroundColor: Colors.green,));
@@ -79,7 +80,18 @@ ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response['msg'
         keyboardType: isPhone ? TextInputType.phone : TextInputType.text,
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Color(0xFF040737), width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Color(0xFF040737), width: 2),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Color(0xFF040737), width: 1),
+          ),
         ),
       ),
     );
@@ -98,7 +110,18 @@ ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response['msg'
         },
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+    border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Color(0xFF040737), width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Color(0xFF040737), width: 2),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Color(0xFF040737), width: 1),
+          ),
         ),
       ),
     );
@@ -110,5 +133,6 @@ ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response['msg'
     print('Roll Number: ${rollNumberController.text}');
     print('Phone Number: ${phoneNumberController.text}');
     print('Role: ${selectedRole ?? 'No role selected'}');
+    print('clubId: ${Shared().clubId}');
   }
 }

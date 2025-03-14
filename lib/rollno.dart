@@ -11,57 +11,49 @@ class Shared {
 
   String rollNo = '';
   String token = '';
-   String clubId='';
-   bool isAdmin=false;
+  String clubId = '';
+  bool isAdmin = false;
+
   /// Initialize the stored values asynchronously
   Future<void> init() async {
-    await loadRollNo();
-    await loadToken();
-    await loadclubIdAndIsAdmin();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    rollNo = prefs.getString('rollNo') ?? '';
+    token = prefs.getString('token') ?? '';
+    clubId = prefs.getString('clubId') ?? '';
+    isAdmin = prefs.getBool('isAdmin') ?? false;
   }
-    Future<void> saveclubId(String clubId, bool isAdmin) async {
+
+  /// Save clubId and isAdmin status
+  Future<void> saveClubId(String clubId, bool isAdmin) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('clubId', clubId);
     await prefs.setBool('isAdmin', isAdmin);
-   
-    this.clubId=clubId;
-    this.isAdmin=isAdmin; // Correctly update the instance variable
+
+    this.clubId = clubId;
+    this.isAdmin = isAdmin;
   }
 
+  /// Save roll number
   Future<void> saveRollNo(String rollNo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('rollno', rollNo);
-    this.rollNo = rollNo; // Correctly update the instance variable
+    await prefs.setString('rollNo', rollNo);
+    this.rollNo = rollNo;
   }
 
+  /// Save token
   Future<void> saveToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
-    this.token = token; // Correctly update the instance variable
-  }
-   Future<void> loadclubIdAndIsAdmin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    clubId=prefs.getString('clubId')??'';
-    isAdmin=prefs.getBool('isAdmin')??false; // Load saved token
+    this.token = token;
   }
 
-  Future<void> loadToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token') ?? ''; // Load saved token
-  }
-
-  Future<void> loadRollNo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    rollNo = prefs.getString('rollno') ?? ''; // Load saved rollNo
-  }
-
+  /// Logout and clear all stored data
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('rollno');
-    await prefs.remove('token'); // Also remove the token
+    await prefs.clear(); // Clears all stored keys
     rollNo = '';
     token = '';
-    clubId='';
-    isAdmin=false;
+    clubId = '';
+    isAdmin = false;
   }
 }

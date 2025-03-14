@@ -1,4 +1,3 @@
-//Updated Profile Screen
 import 'package:flutter/material.dart';
 import 'package:aclub/rollno.dart';
 import 'package:aclub/auth/authService.dart';
@@ -11,78 +10,61 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-AuthService authService=AuthService();
-List<dynamic> details = [];
+  AuthService authService = AuthService();
+  List<dynamic> details = [];
+  String studentName = '';
+  String roll = Shared().rollNo;
+  String branch = '';
+  String campus = 'AU';
+  String year = '3rd Year';
+  String clubMember = '';
+  int eventsParticipated = 5; // Assume this value is fetched from another source
+  String r = Shared().rollNo;
 
-String studentName = '';
-String roll = Shared().rollNo;
-String branch = '';
-String campus = 'AU';
-String year = '3rd Year';
-String clubMember = '';
-int eventsParticipated = 5; // Assume this value is fetched from another source
-String r = Shared().rollNo;
-
-String getBranchFromRoll(String roll) {
-  Map<String, String> branchMap = {
-    "01": "Civil",
-    "02": "EEE",
-    "03": "Mechanical",
-    "04": "ECE",
-    "05": "CSE",
-    "12": "IT",
-    "26": "Mining",
-    "27": "Petroleum",
-    "35": "Agriculture",
-    "44": "Data Science",
-    "61": "AI & ML"
-  };
-
-  if (roll.length >= 8) {
-    String branchCode = roll.substring(6, 8); // Extracting branch code
-    return branchMap[branchCode] ?? "Unknown"; // Default to "Unknown" if not found
-  }
-  return "Unknown"; 
-}
-
-
-
-void getUserDetails() async {
-  final res = await authService.getUserDetails(Shared().token);
-  
-  if (res.containsKey('status') && res['status'] == true) {
-    setState(() {
-      details = res['details'];
-      
-      if (details.isNotEmpty) {
-        var user = details[0];
-        
-        studentName = '${user['firstName']} ${user['lastName']}';
-        
-        // Extracting club memberships
-        List<dynamic> clubs = user['clubs'];
-        clubMember = clubs.map((club) => club['clubId']).join(', '); // Joining club names
-      }
-    });
-  }
-}
-
-
-@override
-void initState() {
-  super.initState();
-  getUserDetails();
-  branch = getBranchFromRoll(roll);
-}
-
-// Profile image URL
-final String profileImageUrl = 'https://info.aec.edu.in/AEC/StudentPhotos/${Shared().rollNo}.jpg';
-
-
-//   List<dynamic> clubs = list['clubs'] ?? [];
-// String clubMember = clubs.isNotEmpty ? clubs.map((club) => club['clubId']).join(', ') : 'No clubs';
-
+  bool _isLoading = true;
   bool _showEnlargedImage = false;
+
+  // Profile image URL
+  final String profileImageUrl = 'https://info.aec.edu.in/AEC/StudentPhotos/${Shared().rollNo}.jpg';
+
+  String getBranchFromRoll(String roll) {
+    Map<String, String> branchMap = {
+      "01": "Civil",
+      "02": "EEE",
+      "03": "Mechanical",
+      "04": "ECE",
+      "05": "CSE",
+      "12": "IT",
+      "26": "Mining",
+      "27": "Petroleum",
+      "35": "Agriculture",
+      "44": "Data Science",
+      "61": "AI & ML"
+    };
+
+    if (roll.length >= 8) {
+      String branchCode = roll.substring(6, 8); // Extracting branch code
+      return branchMap[branchCode] ?? "Unknown"; // Default to "Unknown" if not found
+    }
+    return "Unknown";
+  }
+
+  void getUserDetails() async {
+    final res = await authService.getUserDetails(Shared().token);
+
+    if (res.containsKey('status') && res['status'] == true) {
+      setState(() {
+        details = res['details'];
+        _isLoading = false;
+        if (details.isNotEmpty) {
+          var user = details[0];
+          studentName = '${user['firstName']} ${user['lastName']}';
+          List<dynamic> clubs = user['clubs'];
+          clubMember = clubs.map((club) => club['clubId']).join(', ');
+        }
+      });
+    }
+  }
 
   void _toggleImageSize() {
     setState(() {
@@ -91,9 +73,23 @@ final String profileImageUrl = 'https://info.aec.edu.in/AEC/StudentPhotos/${Shar
   }
 
   @override
+  void initState() {
+    super.initState();
+    branch = getBranchFromRoll(roll);
+    getUserDetails();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final ThemeData theme = Theme.of(context);
+
+    // If still loading, show a loading spinner
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -138,7 +134,7 @@ final String profileImageUrl = 'https://info.aec.edu.in/AEC/StudentPhotos/${Shar
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
                                     color: Colors.grey[200],
-                                    child: const Icon(Icons.error, size: 50),
+                                    child: const Icon(Icons.error, size: 50, color: Colors.red),
                                   );
                                 },
                               ),
@@ -170,17 +166,16 @@ final String profileImageUrl = 'https://info.aec.edu.in/AEC/StudentPhotos/${Shar
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        clubMember,
+                        clubMember.isNotEmpty ? clubMember : 'No clubs',
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: Colors.grey[600],
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      // const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: GridView.count(
-                          crossAxisCount: 2, // Ensures 2 columns in each row
+                          crossAxisCount: 2,
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
                           shrinkWrap: true,
@@ -205,22 +200,10 @@ final String profileImageUrl = 'https://info.aec.edu.in/AEC/StudentPhotos/${Shar
                               color: Colors.green,
                             ),
                             _buildInfoCard(
-                              icon: Icons.calendar_today,
-                              title: "Year",
-                              value: year,
-                              color: Colors.orange,
-                            ),
-                            _buildInfoCard(
                               icon: Icons.group,
                               title: "Club Member",
                               value: clubMember,
                               color: Colors.red,
-                            ),
-                            _buildInfoCard(
-                              icon: Icons.event,
-                              title: "Events",
-                              value: eventsParticipated.toString(),
-                              color: Colors.teal,
                             ),
                           ],
                         ),
@@ -318,9 +301,9 @@ final String profileImageUrl = 'https://info.aec.edu.in/AEC/StudentPhotos/${Shar
             Text(
               title,
               style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: Colors.grey[700],
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 4),

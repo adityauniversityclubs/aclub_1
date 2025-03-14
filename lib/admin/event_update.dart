@@ -1,32 +1,58 @@
-//event creation
+//event update
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../auth/authService.dart';
+import 'package:aclub/auth/authService.dart';
 import 'package:intl/intl.dart';
-// import 'event_update.dart ';
-import 'admin_page.dart';
 
-class EventCreation extends StatefulWidget {
+class UpdateEventScreen extends StatefulWidget {
+  final String eventName;
+  final String guest;
+  final String location;
+  final String mainTheme;
+  final String details;
+  final String dateTime;
+  final File? eventImage;
+
+  UpdateEventScreen({
+    required this.eventName,
+    required this.guest,
+    required this.location,
+    required this.mainTheme,
+    required this.details,
+    required this.dateTime,
+    this.eventImage,
+  });
+
   @override
-  _EventCreationState createState() => _EventCreationState();
+  _UpdateEventScreenState createState() => _UpdateEventScreenState();
 }
 
-class _EventCreationState extends State<EventCreation> {
-  final TextEditingController eventNameController = TextEditingController();
-  final TextEditingController dateTimeController = TextEditingController();
-  final TextEditingController timeController = TextEditingController();
-  final TextEditingController guestController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
-  final TextEditingController mainThemeController = TextEditingController();
-  final TextEditingController detailsController = TextEditingController();
+class _UpdateEventScreenState extends State<UpdateEventScreen> {
+  late TextEditingController eventNameController;
+  late TextEditingController guestController;
+  late TextEditingController locationController;
+  late TextEditingController mainThemeController;
+  late TextEditingController detailsController;
+  late TextEditingController dateTimeController;
   File? _selectedImage;
-  bool _imageSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    eventNameController = TextEditingController(text: widget.eventName);
+    guestController = TextEditingController(text: widget.guest);
+    locationController = TextEditingController(text: widget.location);
+    mainThemeController = TextEditingController(text: widget.mainTheme);
+    detailsController = TextEditingController(text: widget.details);
+    dateTimeController = TextEditingController(text: widget.dateTime);
+    _selectedImage = widget.eventImage;
+  }
   AuthService authService=AuthService();
   void addEvent()async{
     if (_validateInputs()) {
       DateTime eventDate = DateFormat("yyyy-MM-dd").parse(dateTimeController.text);
-      final response = await authService.eventCreation(
+      final response = await authService.updateEvent(
         eventNameController.text,
         DateFormat("yyyy-MM-dd").format(eventDate),
         guestController.text,
@@ -36,29 +62,23 @@ class _EventCreationState extends State<EventCreation> {
         detailsController.text,
         _selectedImage,
       );
-      _submitDetails();
+      _updateEvent();
       if (response.containsKey('status') && response['status'] == true) {
-        // eventNameController.text = '';
-        // dateTimeController.text = '';
-        // guestController.text = '';
-        // locationController.text = '';
-        // mainThemeController.text = '';
-        // detailsController.text = '';
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Event Successfully created'),
+            content: Text('Event Successfully updated'),
             backgroundColor: Colors.green,
           ),
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => AdminPage()),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => AdminPage()),
+        // );
 
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(response['msg'] ?? 'Failed to create event'),
+            content: Text(response['msg'] ?? 'Failed to event update'),
             backgroundColor: Colors.red,
           ),
         );
@@ -85,41 +105,23 @@ class _EventCreationState extends State<EventCreation> {
     }
     return true;
   }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-       appBar: AppBar(
-        title: Center(
-          child: Text(
-            'Event Creation',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-          ),
+      appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back, color: Colors.white),
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.edit_note, color: Colors.white),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => UpdateEventScreen(
-        //             eventName: eventNameController.text,
-        //             guest: guestController.text,
-        //             location: locationController.text,
-        //             mainTheme: mainThemeController.text,
-        //             details: detailsController.text,
-        //             dateTime: dateTimeController.text,
-        //             eventImage: _selectedImage,
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ],
+        title: Center(
+          child: Text('Update Event', style: TextStyle(fontSize: 18, color: Colors.white)),
+        ),
         backgroundColor: Color(0xFF040737),
-        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -128,34 +130,33 @@ class _EventCreationState extends State<EventCreation> {
             children: [
               SizedBox(height: screenHeight * 0.02),
               _buildTextField('Event Name', eventNameController),
+              SizedBox(height: screenHeight * 0.01),
               _buildTextField('Guest', guestController),
+              SizedBox(height: screenHeight * 0.01),
               _buildTextField('Location', locationController),
+              SizedBox(height: screenHeight * 0.01),
               _buildTextField('Main Theme', mainThemeController),
+              SizedBox(height: screenHeight * 0.01),
               _buildTextField('Details', detailsController),
+              SizedBox(height: screenHeight * 0.01),
               _buildDateTimePicker(),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.01),
               _buildImagePicker(screenHeight, screenWidth),
               SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: 20),
               ElevatedButton(
-                onPressed: addEvent,
+                onPressed: _updateEvent,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF040737),
                   padding: EdgeInsets.symmetric(
                     vertical: screenHeight * 0.016,
-                    horizontal: screenWidth * 0.37,
+                    horizontal: screenWidth * 0.3,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-
                 ),
-                child: Text(
-                  'Submit',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500),
-                ),
+                child: Text('Update Event', style: TextStyle(color: Colors.white, fontSize: 18)),
               ),
             ],
           ),
@@ -169,9 +170,18 @@ class _EventCreationState extends State<EventCreation> {
       padding: const EdgeInsets.only(bottom: 12.0),
       child: TextField(
         controller: controller,
+        textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Color(0xFF040737), width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Color(0xFF040737), width: 2),
+          ),
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide(color: Color(0xFF040737), width: 1),
           ),
@@ -179,6 +189,7 @@ class _EventCreationState extends State<EventCreation> {
       ),
     );
   }
+
   Widget _buildDateTimePicker() {
     return GestureDetector(
       onTap: () async {
@@ -214,6 +225,7 @@ class _EventCreationState extends State<EventCreation> {
           controller: dateTimeController,
           decoration: InputDecoration(
             labelText: 'Date & Time',
+
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
               borderSide: BorderSide(color: Color(0xFF040737), width: 1),
@@ -225,8 +237,8 @@ class _EventCreationState extends State<EventCreation> {
   }
 
   Widget _buildImagePicker(double screenHeight, double screenWidth) {
-    double containerHeight = _imageSelected ? screenHeight * 0.2 : screenHeight*0.06;
-    double containerWidth = _imageSelected ? screenWidth : screenWidth*0.9;
+    double containerHeight = _selectedImage != null ? screenHeight * 0.2 : screenHeight * 0.06;
+    double containerWidth = _selectedImage != null ? screenWidth : screenWidth * 0.9;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
@@ -239,61 +251,45 @@ class _EventCreationState extends State<EventCreation> {
           decoration: BoxDecoration(
             border: Border.all(color: Color(0xFF040737), width: 1),
             borderRadius: BorderRadius.circular(20),
-            color: Colors.white,
-          ),
+            color: Colors.white,),
           child: _selectedImage != null
               ? ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.file(
-              _selectedImage!,
-              width: double.infinity,
+            child: Image.file(_selectedImage!,
+              width: containerWidth,
               height: containerHeight,
               fit: BoxFit.cover,
             ),
           )
-              : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Tap to select an image',
-                style: TextStyle(color: Color(0xFF040737)),
-              ),
-            ],
+              : widget.eventImage != null
+              ? ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.file(
+              widget.eventImage!,
+              width:containerWidth ,
+              height: containerHeight,
+              fit: BoxFit.cover,
+            ),
+          ) : Center(
+            child: Text('Tap to select an image', style: TextStyle(color: Color(0xFF040737)),),
           ),
         ),
       ),
     );
   }
 
+
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _selectedImage = File(image.path);
-        _imageSelected = true;
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() { 
+        _selectedImage = File(pickedFile.path);
       });
     }
   }
 
-  void _submitDetails() {
-    print('Event Name: ${eventNameController.text}');
-    print('Guest: ${guestController.text}');
-    print('Location: ${locationController.text}');
-    print('Main Theme: ${mainThemeController.text}');
-    print('Details: ${detailsController.text}');
-    print('Date: ${dateTimeController.text}');
-
-    print('Image: ${_selectedImage?.path ?? 'No image selected'}');
-  }
-
-  @override
-  void dispose() {
-    eventNameController.dispose();
-    guestController.dispose();
-    locationController.dispose();
-    mainThemeController.dispose();
-    detailsController.dispose();
-    dateTimeController.dispose();
-    super.dispose();
+  void _updateEvent() {
+    print('Updated Event Name: ${eventNameController.text}');
   }
 }

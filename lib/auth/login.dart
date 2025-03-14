@@ -53,19 +53,21 @@ bool isAdmin=false;
     return isValid;
   }
 void login() async {
-  _validateInputs();  // Ensure validation is synchronous or await if needed
+  _validateInputs(); // Ensure validation is synchronous or await if needed
   print(rollNumber);
   print(password);
 
   final response = await authService.signUser(rollNumber, password);
-  
+
   if (response.containsKey('status') && response['status'] == true) {
-    await Shared().saveRollNo(rollNumber);
-    await Shared().saveToken(response['token']);
+    Shared shared = Shared();
+
+    await shared.saveRollNo(rollNumber);
+    await shared.saveToken(response['token']);
 
     // Ensure Shared Preferences are updated before fetching details
-    await Shared().init();  
-    String token = Shared().token;  // Now correctly getting the token
+    await shared.init();
+    String token = shared.token; 
 
     final res = await authService.getUserDetails(token);
     print(res);
@@ -77,9 +79,8 @@ void login() async {
 
     for (var club in clubs) {
       if (club is Map && club['role'] == 'admin') {
-        isAdmin = true;
-       String clubId=club['clubId'];
-       await Shared().saveclubId(clubId, isAdmin);
+        String clubId = club['clubId'];
+        await shared.saveClubId(clubId, true);
         break;
       }
     }
@@ -87,16 +88,20 @@ void login() async {
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Successfully logged in")));
 
-    if (!context.mounted) return;  // Prevent navigation if unmounted
-    Navigator.push(
+    if (!context.mounted) return;
+
+    // 🔥 Use pushReplacement to remove login screen from the stack
+    Navigator.pushReplacement(
         context, 
-        MaterialPageRoute(builder: (context) => isAdmin ? Nav_Bar(val: 1) : Nav_Bar(val: 0))
+        MaterialPageRoute(builder: (context) => shared.isAdmin ? Nav_Bar(val: 1) : Nav_Bar(val: 0))
     );
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("${response['msg']}")));
   }
 }
+
+
 
 
 

@@ -654,7 +654,8 @@ Widget _buildCategoryItem(int index) {
         scrollDirection: Axis.horizontal,
         itemCount:getAllLiveData.length ,
         itemBuilder: (context,index){
-      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', getAllLiveData[index]['eventName']);
+      return  _buildListeningCard(getAllLiveData[index]['image']==null?'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D':getAllLiveData[index]['image'], 
+      getAllLiveData[index]['eventName']);
       }),
     );
   }
@@ -672,7 +673,7 @@ Widget _buildCategoryItem(int index) {
          final event=response['eventDetails'][0];
          Navigator.push(context, MaterialPageRoute(
           builder: (context)=>
-          ClubsScreena(clubName: event['clubName'], eventName: event['eventName'], date: DateTime.parse(event['date']), location: event['location'], description: event['details'], list:List<String>.from(event['guest']), rollNo:Shared().rollNo)));
+          ClubsScreena(clubName: event['clubName'], eventName: event['eventName'], date: DateTime.parse(event['date']), location: event['location'], description: event['details'], list:List<String>.from(event['guest']), rollNo:Shared().rollNo,imageUrl: event['image']==null?'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D':event['image'],)));
       }
     },
       child:
@@ -709,7 +710,8 @@ Widget _buildCategoryItem(int index) {
         scrollDirection: Axis.horizontal,
         itemCount:getAllupComingData.length ,
         itemBuilder: (context,index){
-      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', getAllupComingData[index]['eventName']);
+      return  _buildListeningCard(getAllupComingData[index]['image']==null?'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D':getAllupComingData[index]['image'],
+       getAllupComingData[index]['eventName']);
       }),
     );
   }
@@ -722,7 +724,8 @@ Widget _buildCategoryItem(int index) {
         scrollDirection: Axis.horizontal,
         itemCount:getAllPastData.length ,
         itemBuilder: (context,index){
-      return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', getAllPastData[index]['eventName']);
+      return  _buildListeningCard(getAllPastData[index]['image']==null?'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D':getAllPastData[index]['image'],
+       getAllPastData[index]['eventName']);
       }),
     );
   }

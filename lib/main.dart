@@ -3,25 +3,27 @@ import 'package:flutter/material.dart';
 import 'auth/authService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home/bottom_Navbar.dart';
+import 'rollno.dart';
 //import 'rollno.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? rollNo = prefs.getString('rollno');
-  bool? isAdmin = prefs.getBool('isAdmin') ?? false;
+  Shared shared = Shared();
+  await shared.init(); // Ensure stored values are initialized
 
   Widget startingPage;
 
-  if (rollNo != null && rollNo.isNotEmpty && rollNo.length == 10) {
-    startingPage = isAdmin ? Nav_Bar(val: 1) : Nav_Bar(val: 0);
+  if (shared.rollNo.isNotEmpty && shared.rollNo.length == 10) {
+    startingPage = shared.isAdmin ? Nav_Bar(val: 1) : Nav_Bar(val: 0);
   } else {
     startingPage = SimpleLoginScreen();
   }
 
   runApp(MyApp(startingPage: startingPage));
 }
+
+
 
 class MyApp extends StatelessWidget {
   final Widget startingPage; 
@@ -36,8 +38,7 @@ class MyApp extends StatelessWidget {
       // Nav_Bar(val: 0),
        startingPage
       //HomeScreen(),
-      //Allpastevents(),
- 
+      //Allpastevents(), 
       // SimpleRegisterScreen(),
      // ClubsScreen_a(),
     );

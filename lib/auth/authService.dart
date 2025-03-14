@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'package:aclub/rollno.dart';
+import 'dart:io';
+
 import '../admin/event_selection.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl ='https://aclub.onrender.com';
+  final String baseUrl = 'https://aclub.onrender.com';
+  // 'https://lh8bs0gl-3001.inc1.devtunnels.ms';
+  //'https://aclub.onrender.com';
 
 Future<Map<String, dynamic>> registerUser(
     String first, String last, String roll, String phone, String pass) async {
@@ -113,7 +118,8 @@ Future<Map<String,dynamic>>giveFeedBack(String eventName,String feedback,int rat
       "eventName":eventName,
       "feedback":feedback,
       'rating':rating,
-      'rollNo':rollNo
+      'token':Shared().token,
+      'rollNo':Shared().rollNo
      })
   );
    print('response code:${res.statusCode}');
@@ -136,11 +142,13 @@ Future<Map<String,dynamic>>getFeedBack(String eventName)async{
 //event regestration 
 Future<Map<String,dynamic>>registerEvent(String eventName,String rollNo)async{
   final res=await http.post(
+    // Uri.parse('$baseUrl/registrations/register-event'),
     Uri.parse('$baseUrl/registrations/register-event'),
-     headers: {'Content-Type': 'application/json'},
+     headers: {
+      "Authorization":"Bearer ${Shared().token}",
+      'Content-Type': 'application/json'},
      body: jsonEncode({
-      "eventName":eventName,
-      'rollNo':rollNo
+      "eventName":eventName
      })
   );
    print('response code:${res.statusCode}');
@@ -152,8 +160,11 @@ Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)asy
 
   eventName = Uri.encodeComponent(eventName).replaceAll("+", "%20");
   final res=await http.get(
-    Uri.parse('$baseUrl/registrations/registration-status?eventName=$eventName&rollNo=$rollNo'),
-    headers: {'Content-Type': 'application/json'},
+    Uri.parse('$baseUrl/registrations/registration-status?eventName=$eventName}'),
+    headers: {
+      "Authorization":"Bearer ${Shared().token}",
+      'Content-Type': 'application/json'},
+
  );
    print('response code:${res.statusCode}');
    print('response body:${res.body}');
@@ -245,8 +256,8 @@ Future<Map<String,dynamic>>regestrationStatus(String eventName,String rollNo)asy
   return jsonDecode(res.body);
 }
 
-//getAllClubMembers
- Future<Map<String,dynamic>>getAllClubMembers(String clubId)async{
+//getClubMembers
+ Future<Map<String,dynamic>>getClubMembers(String clubId)async{
   final res=await http.get(
     Uri.parse('$baseUrl/participation/get-club-members?clubId=$clubId'),
      headers: {'Content-Type': 'application/json'},
@@ -263,13 +274,15 @@ Future<Map<String, dynamic>> addMember(
   final res = await http.post(
     Uri.parse('$baseUrl/users/add-user'),
     // Uri.parse('https://lh8bs0gl-3001.inc1.devtunnels.ms/user/add-user'),
-    headers: {'Content-Type': 'application/json'},
+    headers: {
+      "Authorization":"Bearer ${Shared().token}",
+      'Content-Type': 'application/json'},
     body: jsonEncode({
       "firstName": first,
       "lastName": last,
       "rollNo": roll,
       "role": role,
-      "clubId": "GDG",
+      "clubId": clubId,
       "phoneNo": phoneNo
     }),
   );
@@ -281,30 +294,6 @@ Future<Map<String, dynamic>> addMember(
 }
 
 
-//event creation
-Future<Map<String, dynamic>> eventCreation(
-    String eventName, DateTime date,String guest,String location , String clubId, String mainTheme,String details) async {
-      String formattedDate = date.toIso8601String();
-  final res = await http.post(
-    Uri.parse('$baseUrl/events/create-event'),
-    // Uri.parse('https://lh8bs0gl-3001.inc1.devtunnels.ms/user/add-user'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({
-      "eventName": eventName,
-      "date": formattedDate,
-      "guest":guest,
-      "location": location,
-      "clubId": "GDG",
-      "mainTheme": mainTheme,
-      "details":details
-    }),
-  );
-
-  print("Response Code: ${res.statusCode}");
-  print("Response Body: ${res.body}");
-
-  return jsonDecode(res.body);
-}
  Future<Map<String,dynamic>>getUserDetails(String token)async{
   final res=await http.get(
     Uri.parse('$baseUrl/users/user-details'),
@@ -316,5 +305,176 @@ Future<Map<String, dynamic>> eventCreation(
   print('response body:${res.body}');
   return jsonDecode(res.body);
 }
+Future<Map<String, dynamic>> eventCreation(
+        String eventName,
+        String date, // Changed to String to match the expected type
+        String guest,
+        String location,
+        String clubId,
+        String mainTheme,
+        String details,
+        File? image, // Keep this as File? for optional image uploads
+        ) async {
+      String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzhhMTA2MWJlZGRmZmE4ZGVmMTIxYTQiLCJhZG1pbiI6dHJ1ZSwicm9sbE5vIjoiMjJhOTFhMDU3MCIsImlhdCI6MTc0MTk1Njk2OCwiZXhwIjoxNzUwNTk2OTY4fQ.Msj8rmceN-rO4MnRs8xOJNPv1QhQD7ULSYEuSUy2-G0"; // Replace with actual token logic
+
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/events/create-event'),
+      );
+
+      request.headers.addAll({
+        "Authorization": "Bearer $token",
+        'Content-Type': 'multipart/form-data',
+      });
+
+      request.fields.addAll({
+        "eventName": eventName,
+        "date": date,
+        "guest": guest,
+        "location": location,
+        "clubId": clubId,
+        "mainTheme": mainTheme,
+        "details": details,
+      });
+
+      if (image != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('eventImage', image.path),
+        );
+      }
+
+      final streamedResponse = await request.send();
+      final res = await http.Response.fromStream(streamedResponse);
+
+      print("Response Code: ${res.statusCode}");
+      print("Response Body: ${res.body}");
+
+      return jsonDecode(res.body);
+    }
+//update User details
+Future<Map<String, dynamic>> UpdateUser(String rollNo,String role
+    ) async {
+  final res = await http.post(
+    Uri.parse('$baseUrl/users/update-user'),
+    // Uri.parse('https://lh8bs0gl-3001.inc1.devtunnels.ms/user/add-user'),
+    headers: {
+      "Authorization":"Bearer ${Shared().token}",
+      'Content-Type': 'application/json'},
+    body: jsonEncode({
+     "rollNo":rollNo,
+     "role":role,
+     "clubId":Shared().clubId
+    }),
+  );
+
+  print("Response Code: ${res.statusCode}");
+  print("Response Body: ${res.body}");
+
+  return jsonDecode(res.body);
+}
+
+//get All ClubMembers
+ Future<Map<String,dynamic>>getAllClubMembers(String clubId)async{
+  final res=await http.get(
+    Uri.parse('$baseUrl/users/get-all-users?clubId=$clubId'),
+     headers: {
+       "Authorization":"Bearer ${Shared().token}",
+      'Content-Type': 'application/json'},
+  );
+   print('response code:${res.statusCode}');
+  print('response body:${res.body}');
+  return jsonDecode(res.body);
+}
+//delete the club members
+Future<Map<String, dynamic>> deleteClubMember(String rollNo,String role
+    ) async {
+  final res = await http.post(
+    Uri.parse('$baseUrl/users/delete-user'),
+    // Uri.parse('https://lh8bs0gl-3001.inc1.devtunnels.ms/user/add-user'),
+    headers: {
+      "Authorization":"Bearer ${Shared().token}",
+      'Content-Type': 'application/json'},
+    body: jsonEncode({
+     "rollNo":rollNo,
+     "role":role,
+     "clubId":Shared().clubId
+    }),
+  );
+
+  print("Response Code: ${res.statusCode}");
+  print("Response Body: ${res.body}");
+
+  return jsonDecode(res.body);
+}
+
+
+//delete the event
+Future<Map<String, dynamic>> deleteEvent(String eventName) async {
+  final res = await http.post(
+    Uri.parse('$baseUrl/events/delete-event'),
+    // Uri.parse('https://lh8bs0gl-3001.inc1.devtunnels.ms/user/add-user'),
+    headers: {
+      "Authorization":"Bearer ${Shared().token}",
+      'Content-Type': 'application/json'},
+    body: jsonEncode({
+    //  "rollNo":rollNo,
+    //  "role":role,
+     "clubId":Shared().clubId,
+     "eventName": eventName
+    }),
+  );
+
+  print("Response Code: ${res.statusCode}");
+  print("Response Body: ${res.body}");
+
+  return jsonDecode(res.body);
+}
+
+
+// update event
+    Future<Map<String, dynamic>> updateEvent(
+        String eventName,
+        String date,
+        String guest,
+        String location,
+        String clubId,
+        String mainTheme,
+        String details,
+        File? image,
+        ) async {
+      String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzhhMTA2MWJlZGRmZmE4ZGVmMTIxYTQiLCJhZG1pbiI6dHJ1ZSwicm9sbE5vIjoiMjJhOTFhMDU3MCIsImlhdCI6MTc0MTk1Njk2OCwiZXhwIjoxNzUwNTk2OTY4fQ.Msj8rmceN-rO4MnRs8xOJNPv1QhQD7ULSYEuSUy2-G0"; // Replace with actual token logic
+
+      final request = http.MultipartRequest('POST',
+        Uri.parse('$baseUrl/events/update-event'),
+      );
+
+      request.headers.addAll({
+        "Authorization": "Bearer $token",
+        'Content-Type': 'multipart/form-data',
+      });
+      request.fields.addAll({
+        "eventName": eventName,
+        "date": date,
+        "guest": guest,
+        "location": location,
+        "clubId": clubId,
+        "mainTheme": mainTheme,
+        "details": details,
+      });
+
+      if (image != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('eventImage', image.path),
+        );
+      }
+
+      final streamedResponse = await request.send();
+      final res = await http.Response.fromStream(streamedResponse);
+
+      print("Response Code: ${res.statusCode}");
+      print("Response Body: ${res.body}");
+
+      return jsonDecode(res.body);
+    }
 
 }
