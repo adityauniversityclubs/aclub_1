@@ -729,7 +729,7 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
          final event=response['eventDetails'][0];
          Navigator.push(context, MaterialPageRoute(
           builder: (context)=>
-          ClubsScreena(clubName: widget.clubName, eventName: event['eventName'], date: DateTime.parse(event['date']), location: event['location'], description: event['details'], list:List<String>.from(event['guest']), rollNo: Shared().token,imageUrl:event['image']==null?'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D':event['image'] ,)));
+          ClubsScreena(clubId: widget.clubId, clubName: widget.clubName, eventName: event['eventName'], date: DateTime.parse(event['date']), location: event['location'], description: event['details'], list:List<String>.from(event['guest']), rollNo: Shared().token,imageUrl:event['image']==null?'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D':event['image'])));
       }
     },
       child: Container(

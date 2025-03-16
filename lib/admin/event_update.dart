@@ -7,18 +7,17 @@ import 'package:intl/intl.dart';
 
 class UpdateEventScreen extends StatefulWidget {
   final String eventName;
-  final String guest;
+final List<String>list;
   final String location;
-  final String mainTheme;
+  // final String mainTheme;
   final String details;
-  final String dateTime;
-  final File? eventImage;
-
+  final DateTime dateTime;
+   File? eventImage;
   UpdateEventScreen({
     required this.eventName,
-    required this.guest,
+    required this.list,
     required this.location,
-    required this.mainTheme,
+    // required this.mainTheme,
     required this.details,
     required this.dateTime,
     this.eventImage,
@@ -32,7 +31,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
   late TextEditingController eventNameController;
   late TextEditingController guestController;
   late TextEditingController locationController;
-  late TextEditingController mainThemeController;
+  // late TextEditingController mainThemeController;
   late TextEditingController detailsController;
   late TextEditingController dateTimeController;
   File? _selectedImage;
@@ -41,26 +40,28 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
   void initState() {
     super.initState();
     eventNameController = TextEditingController(text: widget.eventName);
-    guestController = TextEditingController(text: widget.guest);
+    guestController = TextEditingController(text: widget.list[0]);
     locationController = TextEditingController(text: widget.location);
-    mainThemeController = TextEditingController(text: widget.mainTheme);
+    // mainThemeController = TextEditingController(text: widget.mainTheme);
     detailsController = TextEditingController(text: widget.details);
-    dateTimeController = TextEditingController(text: widget.dateTime);
-    _selectedImage = widget.eventImage;
+    dateTimeController = TextEditingController(text: widget.dateTime.toString());
+    //_selectedImage = widget.eventImage;
   }
   AuthService authService=AuthService();
   void addEvent()async{
     if (_validateInputs()) {
-      DateTime eventDate = DateFormat("yyyy-MM-dd").parse(dateTimeController.text);
+      DateTime eventDate = widget.dateTime;
+      // DateFormat("yyyy-MM-dd").parse(dateTimeController.text);
       final response = await authService.updateEvent(
+        widget.eventName,
         eventNameController.text,
         DateFormat("yyyy-MM-dd").format(eventDate),
         guestController.text,
         locationController.text,
         'GDG',
-        mainThemeController.text,
+        // mainThemeController.text,
         detailsController.text,
-        _selectedImage,
+        _selectedImage
       );
       _updateEvent();
       if (response.containsKey('status') && response['status'] == true) {
@@ -70,6 +71,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
             backgroundColor: Colors.green,
           ),
         );
+        print('respons: $response');
         // Navigator.pushReplacement(
         //   context,
         //   MaterialPageRoute(builder: (context) => AdminPage()),
@@ -98,7 +100,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
         dateTimeController.text.isEmpty ||
         guestController.text.isEmpty ||
         locationController.text.isEmpty ||
-        mainThemeController.text.isEmpty ||
+        // mainThemeController.text.isEmpty ||
         detailsController.text.isEmpty ||
         _selectedImage == null) {
       return false;
@@ -135,8 +137,8 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
               SizedBox(height: screenHeight * 0.01),
               _buildTextField('Location', locationController),
               SizedBox(height: screenHeight * 0.01),
-              _buildTextField('Main Theme', mainThemeController),
-              SizedBox(height: screenHeight * 0.01),
+              // _buildTextField('Main Theme', mainThemeController),
+              // SizedBox(height: screenHeight * 0.01),
               _buildTextField('Details', detailsController),
               SizedBox(height: screenHeight * 0.01),
               _buildDateTimePicker(),
@@ -145,7 +147,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
               SizedBox(height: screenHeight * 0.02),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _updateEvent,
+                onPressed: addEvent,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF040737),
                   padding: EdgeInsets.symmetric(
@@ -265,7 +267,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
               ? ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Image.file(
-              widget.eventImage!,
+            widget.eventImage!,
               width:containerWidth ,
               height: containerHeight,
               fit: BoxFit.cover,

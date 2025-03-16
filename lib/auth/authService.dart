@@ -6,7 +6,8 @@ import '../admin/event_selection.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = 'https://aclub.onrender.com';
+  final String baseUrl = 'https://lh8bs0gl-3001.inc1.devtunnels.ms';
+  //'https://aclub.onrender.com';
   // 'https://lh8bs0gl-3001.inc1.devtunnels.ms';
   //'https://aclub.onrender.com';
 
@@ -434,11 +435,11 @@ Future<Map<String, dynamic>> deleteEvent(String eventName) async {
 // update event
     Future<Map<String, dynamic>> updateEvent(
         String eventName,
+        String neweventName,
         String date,
         String guest,
         String location,
         String clubId,
-        String mainTheme,
         String details,
         File? image,
         ) async {
@@ -454,12 +455,13 @@ Future<Map<String, dynamic>> deleteEvent(String eventName) async {
       });
       request.fields.addAll({
         "eventName": eventName,
-        "date": date,
-        "guest": guest,
-        "location": location,
+        "newEventName": neweventName,
+        "newDate": date,
+        "newGuest": guest,
+        "newLocation": location,
         "clubId": clubId,
-        "mainTheme": mainTheme,
-        "details": details,
+        // "mainTheme": mainTheme,
+        "newDetails": details,
       });
 
       if (image != null) {

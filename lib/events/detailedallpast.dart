@@ -1,8 +1,12 @@
+import 'package:aclub/admin/event_update.dart';
+import 'package:aclub/home/homepage.dart';
+
 import '../auth/authService.dart';
 import '../rollno.dart';
 import 'package:flutter/material.dart';
 /// Main Screen with Tabs
 class ClubsScreena extends StatefulWidget {
+  final String clubId;
   final String clubName;
   final String eventName;
   final DateTime date;
@@ -11,9 +15,9 @@ class ClubsScreena extends StatefulWidget {
   final List<String>list;
   final String rollNo;
   final String imageUrl;
-
   const ClubsScreena({
     super.key,
+    required this.clubId,
     required this.clubName,
     required this.eventName,
     required this.date,
@@ -21,7 +25,7 @@ class ClubsScreena extends StatefulWidget {
     required this.description,
     required this.list,
     required this.rollNo,
-    required this.imageUrl
+    required this.imageUrl,
   });
 
   @override
@@ -33,48 +37,139 @@ class _ClubsScreenState extends State<ClubsScreena>
   late TabController _tabController;
 
   AuthService authService = AuthService();
+// void showDeleteDialog(BuildContext context, String eventName) {
+//   showDialog(
+//     context: context,
+//     barrierDismissible: false, // Prevent dismissing while deleting
+//     builder: (BuildContext context) {
+//       bool isLoading = false;
+
+//       return StatefulBuilder(
+//         builder: (context, setState) {
+//           return AlertDialog(
+//             title: Text("Delete Event"),
+//             content: isLoading
+//                 ? Column(
+//                     mainAxisSize: MainAxisSize.min,
+//                     children: [
+//                       CircularProgressIndicator(),
+//                       SizedBox(height: 10),
+//                       Text("Deleting event..."),
+//                     ],
+//                   )
+//                 : Text("Are you sure you want to delete $eventName?"),
+//             actions: isLoading
+//                 ? []
+//                 : [
+//                     TextButton(
+//                       onPressed: () {
+//                         Navigator.pop(context); // Close dialog
+//                       },
+//                       child: Text("Cancel"),
+//                     ),
+//                     TextButton(
+//                       onPressed: () async {
+//                         setState(() => isLoading = true);
+
+//                         final response = await authService.deleteEvent(eventName);
+
+//                         setState(() => isLoading = false);
+
+//                         if (response['status'] == "true") {
+//                           ScaffoldMessenger.of(context).showSnackBar(
+//                             SnackBar(
+//                               backgroundColor: Colors.green,
+//                               content: Text(response['msg']),
+//                             ),
+//                           );
+//                          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+//                         } else {
+//                           ScaffoldMessenger.of(context).showSnackBar(
+//                             SnackBar(
+//                               backgroundColor: Colors.red,
+//                               content: Text(response['msg'] ?? "Failed to delete Event."),
+//                             ),
+//                           );
+//                         }
+//                       },
+//                       child: Text("Delete", style: TextStyle(color: Colors.red)),
+//                     ),
+//                   ],
+//           );
+//         },
+//       );
+//     },
+//   );
+// }
 void showDeleteDialog(BuildContext context, String eventName) {
   showDialog(
     context: context,
+    barrierDismissible: false, // Prevent dismissing while deleting
     builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Delete Event"),
-        content: Text("Are you sure you want to delete $eventName?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close the dialog
-            },
-            child: Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context); // Close the dialog
+      bool isLoading = false;
 
-              // Send delete request
-              final response = await authService.deleteEvent(eventName);
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text("Delete Event"),
+            content: isLoading
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 10),
+                      Text("Deleting event..."),
+                    ],
+                  )
+                : Text("Are you sure you want to delete $eventName?"),
+            actions: isLoading
+                ? []
+                : [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close dialog
+                      },
+                      child: Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        setState(() => isLoading = true);
 
-              if (response.containsKey('status') && response['status'] == "true") {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.green,
-                    content: Text(response['msg']),
-                  ),
-                );
+                        final response = await authService.deleteEvent(eventName);
 
-                // Remove deleted member from list
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.red,
-                    content: Text(response['msg'] ?? "Failed to delete Event."),
-                  ),
-                );
-              }
-            },
-            child: Text("Delete", style: TextStyle(color: Colors.red)),
-          ),
-        ],
+                        if (response['status'] == "true") {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.green,
+                              content: Text(response['msg']),
+                            ),
+                          );
+
+                          // Close dialog
+                          Navigator.pop(context);
+
+                          // Navigate back to HomeScreen and refresh
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomeScreen()),
+                            (route) => false, // Remove all previous screens
+                          );
+                        } else {
+                          setState(() => isLoading = false);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(response['msg'] ?? "Failed to delete Event."),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text("Delete", style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+          );
+        },
       );
     },
   );
@@ -130,7 +225,7 @@ void showDeleteDialog(BuildContext context, String eventName) {
   centerTitle: true,
   backgroundColor: Color(0xFF040737),
   actions: [
-    if (Shared().isAdmin) // Show menu only if user is admin
+    if (Shared().isAdmin && Shared().clubId == widget.clubId ) // Show menu only if user is admin
       PopupMenuButton<String>(
         icon: Icon(Icons.more_vert, color: Colors.white),
         onSelected: (value) {
@@ -149,23 +244,31 @@ void showDeleteDialog(BuildContext context, String eventName) {
               children: [
                 Icon(Icons.edit, color: Colors.black54),
                 SizedBox(width: 8),
-                Text('Update Event'),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: 'delete',
-            child: Row(
-              children: [
-                Icon(Icons.delete, color: Colors.red),
-                SizedBox(width: 8),
                 GestureDetector(onTap: (){
-                  showDeleteDialog(context,widget.eventName);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>UpdateEventScreen(eventName: widget.eventName, list:widget.list , location: widget.location , details: widget.description, dateTime: widget.date)));
+
+
                 },
-                  child: Text('Delete Event')),
+                  child: Text('Update Event')),
               ],
             ),
           ),
+         PopupMenuItem(
+  value: 'delete',
+  child: Row(
+    children: [
+      Icon(Icons.delete, color: Colors.red),
+      SizedBox(width: 8),
+      GestureDetector(
+        onTap: () {
+          showDeleteDialog(context, widget.eventName);
+        },
+        child: Text('Delete Event'),
+      ),
+    ],
+  ),
+),
+
         ],
       ),
   ],
