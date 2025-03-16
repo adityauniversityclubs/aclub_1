@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:iconsax/iconsax.dart';
 import 'profilePage.dart';
 import '../admin/admin_page.dart';
-import 'all_Clubs_page.dart';
+// import 'all_Clubs_page.dart';
 
 class Nav_Bar extends StatefulWidget {
   final int val; // 0 for normal user, 1 for admin

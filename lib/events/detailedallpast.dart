@@ -192,27 +192,6 @@ void showDeleteDialog(BuildContext context, String eventName) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-
-      //   title: Text(
-      //     '${widget.clubName} Event',
-      //     style: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold, letterSpacing: 1.5),
-      //   ),
-      //   centerTitle: true,
-      //   backgroundColor:  Color(0xFF040737),
-      //   bottom: TabBar(
-      //     controller: _tabController,
-      //     indicatorColor: Color.fromARGB(255, 252, 252, 252),
-      //     labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-      //     labelColor: Colors.white,
-      //     unselectedLabelColor: Colors.white70,
-      //     tabs: const [
-      //       Tab(text: 'Event Details', icon: Icon(Icons.event,color: Colors.white),),
-      //       Tab(text: 'Members', icon: Icon(Icons.group,color: Colors.white,)),
-      //       Tab(text: 'FeedbackS', icon: Icon(Icons.feedback,color: Colors.white,)),
-      //     ],
-      //   ),
-      // ),
       appBar: AppBar(
   title: Text(
     '${widget.clubName} Event',

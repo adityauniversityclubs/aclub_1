@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 
 import '../auth/login.dart';
-import '../events/allpastevents.dart';
 import '../rollno.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -429,128 +428,111 @@ Widget _buildCategoryItem(int index) {
   );
 }
 
+  // Widget _buildEventCard(int index) {
+  //   final List<Map<String, dynamic>> events = [
+  //     {
+  //       'title': 'Leadership Workshop',
+  //       'date': 'March 25',
+  //       'image': 'assets/ob/ob1.jpg',
+  //       'club': 'LEO Club'
+  //     },
+  //     {
+  //       'title': 'Music Festival',
+  //       'date': 'April 2',
+  //       'image': 'assets/ob/ob2.jpg',
+  //       'club': 'SAC'
+  //     },
+  //     {
+  //       'title': 'Coding Challenge',
+  //       'date': 'April 5',
+  //       'image': 'assets/ob/ob3.jpg',
+  //       'club': 'IEDC'
+  //     },
+  //     {
+  //       'title': 'Cultural Night',
+  //       'date': 'April 8',
+  //       'image': 'assets/ob/ob1.jpg',
+  //       'club': 'NSS'
+  //     },
+  //   ];
 
-  Widget _buildEventGrid() {
-    return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.8,
-        mainAxisSpacing: 15,
-        crossAxisSpacing: 15,
-      ),
-      itemCount: 4,
-      itemBuilder: (context, index) => _buildEventCard(index),
-    );
-  }
-
-  Widget _buildEventCard(int index) {
-    final List<Map<String, dynamic>> events = [
-      {
-        'title': 'Leadership Workshop',
-        'date': 'March 25',
-        'image': 'assets/ob/ob1.jpg',
-        'club': 'LEO Club'
-      },
-      {
-        'title': 'Music Festival',
-        'date': 'April 2',
-        'image': 'assets/ob/ob2.jpg',
-        'club': 'SAC'
-      },
-      {
-        'title': 'Coding Challenge',
-        'date': 'April 5',
-        'image': 'assets/ob/ob3.jpg',
-        'club': 'IEDC'
-      },
-      {
-        'title': 'Cultural Night',
-        'date': 'April 8',
-        'image': 'assets/ob/ob1.jpg',
-        'club': 'NSS'
-      },
-    ];
-
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>Allpastevents(),
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          image: DecorationImage(
-            image: NetworkImage(events[index]['image']),
-            fit: BoxFit.cover,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                Colors.black.withOpacity(0.6),
-                Colors.transparent,
-              ],
-            ),
-          ),
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                events[index]['date'],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Text(
-                events[index]['title'],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Icon(Iconsax.clock, color: Colors.white, size: 12),
-                  const SizedBox(width: 4),
-                  Text(
-                    '6:00 PM',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  //   return GestureDetector(
+  //     onTap: () => Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => ,
+  //       ),
+  //     ),
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(15),
+  //         image: DecorationImage(
+  //           image: NetworkImage(events[index]['image']),
+  //           fit: BoxFit.cover,
+  //         ),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.black.withOpacity(0.1),
+  //             blurRadius: 10,
+  //             spreadRadius: 2,
+  //           ),
+  //         ],
+  //       ),
+  //       child: Container(
+  //         decoration: BoxDecoration(
+  //           borderRadius: BorderRadius.circular(15),
+  //           gradient: LinearGradient(
+  //             begin: Alignment.bottomCenter,
+  //             end: Alignment.topCenter,
+  //             colors: [
+  //               Colors.black.withOpacity(0.6),
+  //               Colors.transparent,
+  //             ],
+  //           ),
+  //         ),
+  //         padding: const EdgeInsets.all(12),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: [
+  //             Text(
+  //               events[index]['date'],
+  //               style: const TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 12,
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //             ),
+  //             Text(
+  //               events[index]['title'],
+  //               style: const TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 14,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //               maxLines: 2,
+  //               overflow: TextOverflow.ellipsis,
+  //             ),
+  //             const SizedBox(height: 4),
+  //             Row(
+  //               children: [
+  //                 const Icon(Iconsax.clock, color: Colors.white, size: 12),
+  //                 const SizedBox(width: 4),
+  //                 Text(
+  //                   '6:00 PM',
+  //                   style: TextStyle(
+  //                     color: Colors.white.withOpacity(0.9),
+  //                     fontSize: 12,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildNewsList() {
     return ListView.separated(

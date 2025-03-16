@@ -1,6 +1,6 @@
 
 import '../auth/authService.dart';
-import '../events/allpastevents.dart';
+// import '../events/allpastevents.dart';
 import '../events/detailedallpast.dart';
 import '../rollno.dart';
 import 'package:flutter/material.dart';
@@ -339,33 +339,6 @@ class DetailScreen extends StatelessWidget {
   final String lastName;
   const DetailScreen({super.key ,required this.firstName,required this.lastName});
 
-  // Widget buildSocialIcons(BuildContext context, List<String> social) {
-  //   final screenWidth = MediaQuery.of(context).size.width;
-  //   final iconSize = screenWidth * 0.08;
-  //   final Map<String, IconData> icons = {
-  //     'facebook': Icons.facebook,
-  //     'instagram': Icons.airplanemode_on_outlined,
-  //     'linkedin': Icons.camera_alt,
-  //     'web': Icons.language,
-  //   };
-
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: social
-  //         .map(
-  //           (platform) => Padding(
-  //             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-  //             child: Icon(
-  //               icons[platform],
-  //               size: iconSize,
-  //               color:  Color(0xFFFFFF)[700],
-  //             ),
-  //           ),
-  //         )
-  //         .toList(),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -483,128 +456,6 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
           // if (onSeeAll != null)
           
         ],
-      ),
-    );
-  }
-
-  Widget _buildEventGrid() {
-    return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.8,
-        mainAxisSpacing: 15,
-        crossAxisSpacing: 15,
-      ),
-      itemCount: 4,
-      itemBuilder: (context, index) => _buildEventCard(context, index),
-    );
-  }
-
-  Widget _buildEventCard(BuildContext context, int index) {
-    final List<Map<String, dynamic>> events = [
-      {
-        'title': 'Leadership Workshop',
-        'date': 'March 25',
-        'image': 'assets/ob/ob1.jpg',
-        'club': 'LEO Club'
-      },
-      {
-        'title': 'Music Festival',
-        'date': 'April 2',
-        'image': 'assets/ob/ob2.jpg',
-        'club': 'SAC'
-      },
-      {
-        'title': 'Coding Challenge',
-        'date': 'April 5',
-        'image': 'assets/ob/ob3.jpg',
-        'club': 'IEDC'
-      },
-      {
-        'title': 'Cultural Night',
-        'date': 'April 8',
-        'image': 'assets/ob/ob1.jpg',
-        'club': 'NSS'
-      },
-    ];
-
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Allpastevents(),
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          image: DecorationImage(
-            image: AssetImage(events[index]['image']),
-            fit: BoxFit.cover,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                Colors.black.withOpacity(0.6),
-                Colors.transparent,
-              ],
-            ),
-          ),
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                events[index]['date'],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Text(
-                events[index]['title'],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Icon(Iconsax.clock, color: Colors.white, size: 12),
-                  const SizedBox(width: 4),
-                  Text(
-                    '6:00 PM',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -756,21 +607,6 @@ class _ClubsEventScreenState extends State<ClubsEventScreen> {
       ),
     );
   }
-  //  Widget _buildKnowledgeSection(List<dynamic>list) {
-  //   return SizedBox(
-  //     width: 150,
-  //     height: 150,
-  //     child: ListView.builder(
-  //       scrollDirection: Axis.horizontal,
-  //       itemCount:list.length ,
-  //       itemBuilder: (context,index){
-  //     return  _buildListeningCard('https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', list[index]['eventName']);
-  //     }),
-  //   );
-  // }
-
-
-
 
   Widget _buildledgeSection(List<dynamic>list) {
     return list.isEmpty?Center(child: Image.asset('assets/noevent.jpg'),):SizedBox(

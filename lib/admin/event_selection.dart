@@ -97,27 +97,7 @@ class _EventCreationState extends State<EventCreation> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
           ),
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.edit_note, color: Colors.white),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => UpdateEventScreen(
-        //             eventName: eventNameController.text,
-        //             guest: guestController.text,
-        //             location: locationController.text,
-        //             mainTheme: mainThemeController.text,
-        //             details: detailsController.text,
-        //             dateTime: dateTimeController.text,
-        //             eventImage: _selectedImage,
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ],
+        
         backgroundColor: Color(0xFF040737),
         iconTheme: IconThemeData(color: Colors.white),
       ),

@@ -113,20 +113,6 @@ class _OtpPageState extends State<OtpPage> {
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(height:screenHeight*0.03 ),
-                  // ElevatedButton(
-                  //   onPressed: resetPassword,
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: Color(0xFF040737),
-                  //     padding: EdgeInsets.symmetric(
-                  //       vertical: screenHeight * 0.016,
-                  //       horizontal: screenWidth * 0.37,
-                  //     ),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(20),
-                  //     ),
-                  //   ),
-                  //   child:Text('Submit', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500)),
-                  // ),
                    ElevatedButton(
                     onPressed: resetPassword,
                     style: ElevatedButton.styleFrom(
